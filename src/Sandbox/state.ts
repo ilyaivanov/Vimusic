@@ -1,7 +1,7 @@
-import {Action, AppState} from "./types";
+import {Action, AppState, TreeDefinition, TreeNode} from "./types";
 import {useReducer} from "react";
 import {createApp} from "./initialState";
-import {contains, getNextItem, getPreviousItem, isFirst, isLast, last} from "../utils/array";
+import {contains, isFirst, isLast, last, nextItem, previousItem} from "../utils/array";
 
 
 const initial: AppState = {
@@ -11,21 +11,38 @@ const initial: AppState = {
 };
 
 export const reducer = (state: AppState, action: Action): AppState => {
-  if (action.type == 'ArrowDown') {
-    const children = state.nodes[state.selectedNode].children;
-    if (children && children.length > 0) {
-      return setSelectedNode(state, children[0]);
-    }
+  if ((action.type === 'ArrowRight' || action.type == 'ArrowDown') && hasChildren(state, state.selectedNode)) {
+    return setSelectedNode(state, getChildren(state, state.selectedNode)[0]);
+  }
 
+  if (action.type === 'ArrowRight') {
+    const newNodes = createNewNodes(state.selectedNode);
+    return {
+      ...state,
+      selectedNode: newNodes[0].id,
+      nodes: appendNodeto(state.nodes, state.selectedNode, newNodes)
+    };
+  }
+
+  if (action.type === 'ArrowLeft') {
+    if (isRoot(state, state.selectedNode))
+      return state;
+    return {
+      ...state,
+      selectedNode: getParentKey(state, state.selectedNode),
+    };
+  }
+
+  if (action.type == 'ArrowDown') {
     const context = getContext(state, state.selectedNode);
     if (isLast(context, state.selectedNode)) {
       const parentContext = getParentContext(state, state.selectedNode);
       if (isLast(parentContext.context, parentContext.parent))
         return state;
-      return setSelectedNode(state, getNextItem(parentContext.context, parentContext.parent));
+      return setSelectedNode(state, nextItem(parentContext.context, parentContext.parent));
     }
 
-    return setSelectedNode(state, getNextItem(context, state.selectedNode));
+    return setSelectedNode(state, nextItem(context, state.selectedNode));
   }
   if (action.type == 'ArrowUp') {
     const context = getContext(state, state.selectedNode);
@@ -35,7 +52,7 @@ export const reducer = (state: AppState, action: Action): AppState => {
       return setSelectedNode(state, getDirectParentContext(state, state.selectedNode).parent);
     }
 
-    const previousNode = getPreviousItem(context, state.selectedNode);
+    const previousNode = previousItem(context, state.selectedNode);
     return setSelectedNode(state, getDeepestChild(state, previousNode));
   }
   return state;
@@ -57,7 +74,12 @@ const getContext = (state: AppState, nodeId: string): string[] => {
   if (state.rootNodes.indexOf(nodeId) >= 0)
     return state.rootNodes;
   const parentKey = getParentKey(state, nodeId);
-  return state.nodes[parentKey].children as string[];
+  const {children} = state.nodes[parentKey];
+
+  if (!children)
+    throw new Error(`No children found for ${nodeId} and it doesn't exist in the root`);
+
+  return children;
 };
 
 interface Parent {
@@ -78,20 +100,53 @@ const getParentContext = (state: AppState, nodeId: string): Parent => {
   return {parent: parentKey, context: getContext(state, parentKey)};
 };
 
-const getParentKey = (state: AppState, nodeId: string) =>
-  Object
+const getParentKey = (state: AppState, nodeId: string) => {
+  const key = Object
     .keys(state.nodes)
-    .find(key => contains(state.nodes[key].children, nodeId)) as string;
+    .find(key => contains(state.nodes[key].children, nodeId));
+  if (!key)
+    throw new Error(`Couldn't find parent id for ${nodeId}`);
+  return key;
+};
 
 
 const getDeepestChild = (state: AppState, nodeId: string) => {
   let node = nodeId;
-  while (state.nodes[node].children) {
-    node = last(state.nodes[node].children as string[]);
+  while (hasChildren(state, node)) {
+    node = last(getChildren(state, node));
   }
   return node;
+};
+
+const hasChildren = (state: AppState, nodeId: string) => {
+  const children = getChildren(state, nodeId);
+  return children && children.length > 0;
+};
+
+const getChildren = (state: AppState, nodeId: string): string[] => {
+  return state.nodes[nodeId].children || [];
 };
 
 const isRoot = (state: AppState, nodeId: string) =>
   contains(state.rootNodes, nodeId);
 
+
+const appendNodeto = (tree: TreeNode, nodeId: string, newNodes: TreeDefinition[]): TreeNode => {
+  const newTree = {...tree};
+  newTree[nodeId] = {
+    ...newTree[nodeId],
+    children: newNodes.map(n => n.id),
+  };
+  newNodes.forEach(node => {
+    newTree[node.id] = node;
+  });
+  return newTree;
+};
+
+const createNewNodes = (currentNode: string) =>
+  ['.1', '.2', '.3']
+    .map(n => currentNode + n)
+    .map(id => ({
+      id,
+      text: id,
+    }));

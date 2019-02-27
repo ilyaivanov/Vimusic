@@ -14,7 +14,7 @@ export interface TreeDefinition {
   text: string;
 }
 
-export type ActionType = 'ArrowDown' | 'ArrowUp';
+export type ActionType = 'ArrowDown' | 'ArrowUp' | 'ArrowRight' | 'ArrowLeft';
 
 
 export interface Action {

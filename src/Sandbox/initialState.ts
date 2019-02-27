@@ -21,7 +21,7 @@ export const createApp = (): TreeNode => ({
 });
 
 
-const createNodeEntry = (key: string, children?: string[]) => ({
+export const createNodeEntry = (key: string, children?: string[]) => ({
   [key]: {
     id: key,
     text: key,

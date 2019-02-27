@@ -1,8 +1,8 @@
-export function getNextItem<T>(array: T[], item: T) {
+export function nextItem<T>(array: T[], item: T) {
   return array[array.indexOf(item) + 1];
 }
 
-export function getPreviousItem<T>(array: T[], item: T) {
+export function previousItem<T>(array: T[], item: T) {
   return array[array.indexOf(item) - 1];
 }
 

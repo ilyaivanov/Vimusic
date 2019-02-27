@@ -15,6 +15,12 @@ const moveUp = (state: AppState) =>
 const moveDown = (state: AppState) =>
   reducer(state, {type: 'ArrowDown'});
 
+const moveRight = (state: AppState) =>
+  reducer(state, {type: 'ArrowRight'});
+
+const moveLeft = (state: AppState) =>
+  reducer(state, {type: 'ArrowLeft'});
+
 const verifyMoveDown = (initialPosition: string, expectedPosition: string) => {
   const state = createState(initialPosition);
   expect(moveDown(state).selectedNode).toEqual(expectedPosition);
@@ -63,7 +69,6 @@ describe('Having a default navigation tree state', () => {
       verifyMoveDown('3.2', '3.2'));
   });
 
-
   describe('when moving up', () => {
     test('from 1 should move to 1', () =>
       verifyMoveUp('1', '1'));
@@ -89,4 +94,54 @@ describe('Having a default navigation tree state', () => {
     test('from 3.2 should move to 3.1', () =>
       verifyMoveUp('3.2', '3.1'));
   });
+
+  describe('when moving right', () => {
+    describe('on node 1.1', () => {
+      it('node 1.1.1 should be selected (since node 1.1 has children)', () => {
+        const state = createState('1.1');
+        expect(moveRight(state).selectedNode).toEqual('1.1.1');
+      });
+    });
+
+    describe('on node 1.1.1', () => {
+      let newState: AppState;
+      beforeEach(() => {
+        const state = createState('1.1.1');
+        newState = newState = moveRight(state);
+      });
+
+      it('node 1.1.1.1 should be selected (since node 1.1.1 has no children new children would be generated)', () => {
+        expect(newState.selectedNode).toEqual('1.1.1.1');
+      });
+
+      it('new nodes should be added', () => {
+        expect(newState.nodes['1.1.1.1'].id).toEqual('1.1.1.1');
+        expect(newState.nodes['1.1.1.2'].id).toEqual('1.1.1.2');
+        expect(newState.nodes['1.1.1.3'].id).toEqual('1.1.1.3');
+      });
+
+      it('children of 1.1.1 should be updated', () => {
+        expect(newState.nodes['1.1.1'].children).toEqual(['1.1.1.1', '1.1.1.2', '1.1.1.3']);
+      });
+    });
+  });
+
+
+  describe('when moving left', () => {
+    it('on node 1.1.1 should select parent', () => {
+      const state = createState('1.1.1');
+      expect(moveLeft(state).selectedNode).toEqual('1.1');
+    });
+
+    it('on node 1 should do nothing', () => {
+      const state = createState('1');
+      expect(moveLeft(state).selectedNode).toEqual('1');
+    });
+
+    it('on node 3 should do nothing', () => {
+      const state = createState('3');
+      expect(moveLeft(state).selectedNode).toEqual('3');
+    });
+  });
+
 });
