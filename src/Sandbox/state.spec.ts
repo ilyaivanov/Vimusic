@@ -1,6 +1,7 @@
 import {reducer} from './state';
 import {AppState} from "./types";
 import {createApp} from "./initialState";
+import {isNodeHidden, setNodeIsHidden} from "./treeUtils";
 
 
 const createState = (selected: string): AppState => ({
@@ -133,9 +134,10 @@ describe('Having a default navigation tree state', () => {
       expect(moveLeft(state).selectedNode).toEqual('1.1');
     });
 
-    it('on node 1 should do nothing', () => {
-      const state = createState('1');
-      expect(moveLeft(state).selectedNode).toEqual('1');
+    it('on node 1 should hide node 1', () => {
+      const state = moveLeft(createState('1'));
+      expect(state.selectedNode).toEqual('1');
+      expect(isNodeHidden(state, '1')).toEqual(true);
     });
 
     it('on node 3 should do nothing', () => {
@@ -144,4 +146,45 @@ describe('Having a default navigation tree state', () => {
     });
   });
 
+});
+
+describe('moving left from node 2', () => {
+  it('should do nothing', () => {
+    expect(moveLeft(createState('2')).selectedNode).toEqual('2');
+  });
+});
+
+describe('Moving left from 1.1 node ', () => {
+  let movedLeft: AppState;
+
+  beforeEach(() => {
+    movedLeft = moveLeft(createState('1.1'));
+  });
+
+  it('should hide children on that node', () => {
+    expect(movedLeft.nodes['1.1'].isChildrenHidden).toEqual(true);
+  });
+
+  it('moving down should ignore hidden nodes and select 2', () => {
+    expect(moveDown(movedLeft).selectedNode).toEqual('2');
+  });
+
+  describe('moving right', () => {
+    it('moving right should show children on that node', () => {
+      expect(moveRight(movedLeft).nodes['1.1'].isChildrenHidden).toEqual(false);
+    });
+  });
+
+  describe('moving left again', () => {
+    it('should select parent', () => {
+      expect(moveLeft(movedLeft).selectedNode).toEqual('1');
+    });
+  });
+});
+
+describe('when node 1.1 is hidden and node 2 is selected', () => {
+  it('moving up should select 1.1 node and not 1.1.2 node', () => {
+    const state = setNodeIsHidden(createState('2'), '1.1', true);
+    expect(moveUp(state).selectedNode).toEqual('1.1');
+  });
 });

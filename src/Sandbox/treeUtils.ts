@@ -38,7 +38,7 @@ export const getParentKey = (state: AppState, nodeId: string) => {
 
 export const getDeepestChild = (state: AppState, nodeId?: string) => {
   let node = nodeId || last(state.rootNodes);
-  while (hasChildren(state, node)) {
+  while (hasChildren(state, node) && !isNodeHidden(state, node)) {
     node = last(getChildren(state, node));
   }
   return node;
@@ -68,3 +68,20 @@ export const appendNodes = (tree: TreeNode, nodeId: string, newNodes: TreeDefini
   });
   return newTree;
 };
+
+
+export const setNodeIsHidden = (state: AppState, nodeId: string, isHidden: boolean) => {
+  return {
+    ...state,
+    nodes: {
+      ...state.nodes,
+      [nodeId]: {
+        ...state.nodes[nodeId],
+        isChildrenHidden: isHidden
+      }
+    }
+  }
+}
+
+export const isNodeHidden = (state: AppState, nodeId: string) =>
+  state.nodes[nodeId].isChildrenHidden;

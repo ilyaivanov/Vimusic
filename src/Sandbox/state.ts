@@ -10,7 +10,9 @@ import {
   getParentContext,
   getParentKey,
   hasChildren,
-  isRoot
+  isNodeHidden,
+  isRoot,
+  setNodeIsHidden
 } from "./treeUtils";
 
 
@@ -23,18 +25,19 @@ const initial: AppState = {
 export const reducer = (state: AppState, action: Action): AppState => {
 
   if (
-    action.type === 'ArrowLeft' && isRoot(state, state.selectedNode) ||
     action.type === 'ArrowUp' && isFirst(state.rootNodes, state.selectedNode) ||
     action.type === 'ArrowDown' && getDeepestChild(state) === state.selectedNode
   ) {
     return state;
   }
 
-  if ((action.type === 'ArrowRight' || action.type == 'ArrowDown') && hasChildren(state, state.selectedNode)) {
-    return setSelectedNode(state, getChildren(state, state.selectedNode)[0]);
-  }
-
   if (action.type === 'ArrowRight') {
+    if (state.nodes[state.selectedNode].isChildrenHidden) {
+      return setNodeIsHidden(state, state.selectedNode, false);
+    }
+    if (hasChildren(state, state.selectedNode)) {
+      return setSelectedNode(state, getChildren(state, state.selectedNode)[0]);
+    }
     const newNodes = createNewNodes(state.selectedNode);
     return {
       ...state,
@@ -43,10 +46,19 @@ export const reducer = (state: AppState, action: Action): AppState => {
   }
 
   if (action.type === 'ArrowLeft') {
+    if (!isNodeHidden(state, state.selectedNode) && hasChildren(state, state.selectedNode)) {
+      return setNodeIsHidden(state, state.selectedNode, true);
+    }
+    if (isRoot(state, state.selectedNode))
+      return state;
     return setSelectedNode(state, getParentKey(state, state.selectedNode));
   }
 
   if (action.type == 'ArrowDown') {
+    if (hasChildren(state, state.selectedNode) && !isNodeHidden(state, state.selectedNode)) {
+      return setSelectedNode(state, getChildren(state, state.selectedNode)[0]);
+    }
+
     const context = getContext(state, state.selectedNode);
     if (isLast(context, state.selectedNode)) {
       const parentContext = getParentContext(state, state.selectedNode);

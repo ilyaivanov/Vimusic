@@ -13,8 +13,8 @@ export const List = ({nodes, selectedId, nodeToShow, level = 0}: Props) => (
     {
       nodeToShow.map(n => (
         <Fragment key={n}>
-          <RowItem isSelected={selectedId === n} text={nodes[n].text} level={level}/>
-          {nodes[n].children &&
+          <RowItem isSelected={selectedId === n} text={nodes[n].text} level={level} isHidden={nodes[n].isChildrenHidden}/>
+          {nodes[n].children && !nodes[n].isChildrenHidden &&
           <List nodes={nodes} nodeToShow={nodes[n].children as string[]} selectedId={selectedId} level={level + 1}/>}
         </Fragment>
       ))
@@ -25,13 +25,14 @@ export const List = ({nodes, selectedId, nodeToShow, level = 0}: Props) => (
 interface RowItemProps {
   level?: number;
   isSelected?: boolean;
+  isHidden?: boolean;
   text: string;
 }
 
-const RowItem = ({level, isSelected, text}: RowItemProps) => (
+const RowItem = ({level, isSelected, text, isHidden}: RowItemProps) => (
   <div style={{
     fontWeight: isSelected ? 600 : undefined,
     paddingLeft: level ? level * 20 : undefined,
     backgroundColor: isSelected ? '#c3c3c3' : undefined
-  }}>{text}</div>
+  }}>{text}{isHidden ? '...' : ''}</div>
 );

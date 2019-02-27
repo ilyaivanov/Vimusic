@@ -12,6 +12,7 @@ export interface TreeDefinition {
   id: string;
   children?: string[];
   text: string;
+  isChildrenHidden?: boolean;
 }
 
 export type ActionType = 'ArrowDown' | 'ArrowUp' | 'ArrowRight' | 'ArrowLeft';
