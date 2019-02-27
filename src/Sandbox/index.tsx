@@ -8,7 +8,7 @@ export default () => {
   useKeyboard(event => {
     dispatch({type: event.code as ActionType});
   });
-  return <List nodes={app.nodes} selectedId={app.selectedNode}/>
+  return <List nodes={app.nodes} nodeToShow={app.rootNodes} selectedId={app.selectedNode}/>
 }
 
 

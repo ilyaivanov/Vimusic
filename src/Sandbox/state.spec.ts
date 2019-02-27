@@ -1,48 +1,92 @@
 import {reducer} from './state';
-import {AppState, TreeNode} from "./types";
+import {AppState} from "./types";
+import {createApp} from "./initialState";
 
-const createNode = (id: string, children?: TreeNode[]) => ({
-  id,
-  text: id,
-  children
+
+const createState = (selected: string): AppState => ({
+  selectedNode: selected,
+  nodes: createApp(),
+  rootNodes: ['1', '2', '3']
 });
 
-describe('Having three nodes each without children', () => {
+const moveUp = (state: AppState) =>
+  reducer(state, {type: 'ArrowUp'});
 
-  const treeNodes: TreeNode[] = [
-    createNode('first'),
-    createNode('second'),
-    createNode('third'),
-  ];
+const moveDown = (state: AppState) =>
+  reducer(state, {type: 'ArrowDown'});
 
-  describe('with first selected', () => {
-    const state: AppState = {
-      nodes: treeNodes,
-      selectedNode: 'first'
-    };
+const verifyMoveDown = (initialPosition: string, expectedPosition: string) => {
+  const state = createState(initialPosition);
+  expect(moveDown(state).selectedNode).toEqual(expectedPosition);
+};
 
-    it('when moving down second node should be selected', () => {
-      expect(reducer(state, {type: 'ArrowDown'}).selectedNode).toEqual('second');
-    });
+const verifyMoveUp = (initialPosition: string, expectedPosition: string) => {
+  const state = createState(initialPosition);
+  expect(moveUp(state).selectedNode).toEqual(expectedPosition);
+};
 
-    it('when moving up nothing should happen', () => {
-      expect(reducer(state, {type: 'ArrowUp'}).selectedNode).toEqual('first');
-    });
+
+//1
+//  1.1
+//    1.1.1
+//    1.1.2
+//2
+//3
+//  3.1
+//  3.2
+
+describe('Having a default navigation tree state', () => {
+
+  describe('when moving down', () => {
+    test('from 1 should move to 1.1', () =>
+      verifyMoveDown('1', '1.1'));
+
+    test('from 1.1 should move to 1.1.1', () =>
+      verifyMoveDown('1.1', '1.1.1'));
+
+    test('from 1.1.1 should move to 1.1.2', () =>
+      verifyMoveDown('1.1.1', '1.1.2'));
+
+    test('from 1.1.2 should move to 2', () =>
+      verifyMoveDown('1.1.2', '2'));
+
+    test('from 2 should move to 3', () =>
+      verifyMoveDown('2', '3'));
+
+    test('from 3 should move to 3.1', () =>
+      verifyMoveDown('3', '3.1'));
+
+    test('from 3.1 should move to 3,2', () =>
+      verifyMoveDown('3.1', '3.2'));
+
+    test('from 3.2 should move to 3.2', () =>
+      verifyMoveDown('3.2', '3.2'));
   });
 
-  describe('when third is selected', () => {
-    const state: AppState = {
-      nodes: treeNodes,
-      selectedNode: 'third'
-    };
 
-    it('when moving down nothing should happen', () => {
-      expect(reducer(state, {type: 'ArrowDown'}).selectedNode).toEqual('third');
-    });
+  describe('when moving up', () => {
+    test('from 1 should move to 1', () =>
+      verifyMoveUp('1', '1'));
 
-    it('when moving up second should be selected', () => {
-      expect(reducer(state, {type: 'ArrowUp'}).selectedNode).toEqual('second');
-    });
+    test('from 1.1 should move to 1', () =>
+      verifyMoveUp('1.1', '1'));
+
+    test('from 1.1.1 should move to 1.1', () =>
+      verifyMoveUp('1.1.1', '1.1'));
+
+    test('from 1.1.2 should move to 1.1.1', () =>
+      verifyMoveUp('1.1.2', '1.1.1'));
+
+    test('from 2 should move to 1.1.2', () =>
+      verifyMoveUp('2', '1.1.2'));
+
+    test('from 3 should move to 2', () =>
+      verifyMoveUp('3', '2'));
+
+    test('from 3.1 should move to 3', () =>
+      verifyMoveUp('3.1', '3'));
+
+    test('from 3.2 should move to 3.1', () =>
+      verifyMoveUp('3.2', '3.1'));
   });
-
 });

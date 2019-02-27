@@ -2,18 +2,20 @@ import React, {Fragment} from "react";
 import {TreeNode} from "./types";
 
 interface Props {
-  nodes: TreeNode[],
+  nodes: TreeNode,
+  nodeToShow: string[],
   selectedId: string,
   level?: number
 }
 
-export const List = ({nodes, selectedId, level = 0}: Props) => (
+export const List = ({nodes, selectedId, nodeToShow, level = 0}: Props) => (
   <Fragment>
     {
-      nodes.map(n => (
-        <Fragment key={n.id}>
-          <RowItem isSelected={selectedId === n.id} text={n.text} level={level}/>
-          {n.children && <List nodes={n.children} selectedId={selectedId} level={level + 1}/>}
+      nodeToShow.map(n => (
+        <Fragment key={n}>
+          <RowItem isSelected={selectedId === n} text={nodes[n].text} level={level}/>
+          {nodes[n].children &&
+          <List nodes={nodes} nodeToShow={nodes[n].children as string[]} selectedId={selectedId} level={level + 1}/>}
         </Fragment>
       ))
     }

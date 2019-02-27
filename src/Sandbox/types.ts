@@ -1,11 +1,16 @@
 export interface AppState {
-  nodes: TreeNode[];
+  nodes: TreeNode;
   selectedNode: string;
+  rootNodes: string[];
 }
 
 export interface TreeNode {
+  [id: string]: TreeDefinition;
+}
+
+export interface TreeDefinition {
   id: string;
-  children?: TreeNode[];
+  children?: string[];
   text: string;
 }
 
