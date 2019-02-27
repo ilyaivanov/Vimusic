@@ -110,8 +110,8 @@ describe('Having a default navigation tree state', () => {
         newState = newState = moveRight(state);
       });
 
-      it('node 1.1.1.1 should be selected (since node 1.1.1 has no children new children would be generated)', () => {
-        expect(newState.selectedNode).toEqual('1.1.1.1');
+      it('node 1.1.1 should still be selected', () => {
+        expect(newState.selectedNode).toEqual('1.1.1');
       });
 
       it('new nodes should be added', () => {
