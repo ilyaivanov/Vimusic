@@ -1,3 +1,5 @@
+import {Video} from "../api";
+
 export interface AppState {
   nodes: TreeNode;
   selectedNode: string;
@@ -18,6 +20,14 @@ export interface TreeDefinition {
 export type ActionType = 'ArrowDown' | 'ArrowUp' | 'ArrowRight' | 'ArrowLeft';
 
 
-export interface Action {
+export interface PlainAction {
   type: ActionType;
 }
+
+
+export interface SetAction {
+  type: 'SET_NODES',
+  videos: Video[]
+}
+
+export type Action = PlainAction | SetAction;

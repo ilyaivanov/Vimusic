@@ -1,24 +1,30 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {List} from "./List";
-import {ActionType} from "./types";
-import {useAppState} from "./state";
+import {Action, ActionType, AppState} from "./types";
 
-export default () => {
-  const [app, dispatch] = useAppState();
+type Dispatch = (action: Action) => void;
+
+export default ({app, dispatch}: { app: AppState, dispatch: Dispatch }) => {
+  const [focus, setFocus] = useState(false);
+
   useKeyboard(event => {
-    dispatch({type: event.code as ActionType});
-  });
-  return <List nodes={app.nodes} nodeToShow={app.rootNodes} selectedId={app.selectedNode}/>
+    if (focus) {
+      dispatch({type: event.code as ActionType});
+    }
+  }, [focus]);
+
+  return <div tabIndex={2} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}>
+    <List nodes={app.nodes} nodeToShow={app.rootNodes} selectedId={app.selectedNode}/>
+  </div>;
 }
 
 
 //Hooks
-const useKeyboard = (handleEvent: (event: DocumentEventMap['keydown']) => void) => {
+const useKeyboard = (handleEvent: (event: DocumentEventMap['keydown']) => void, deps: {}[]) => {
   return useEffect(() => {
     window.document.addEventListener('keydown', handleEvent);
     return () => {
       window.document.removeEventListener('keydown', handleEvent);
     };
-  }, []);
+  }, deps);
 };
-

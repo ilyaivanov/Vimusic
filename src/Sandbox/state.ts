@@ -1,4 +1,4 @@
-import {Action, AppState} from "./types";
+import {Action, AppState, TreeNode} from "./types";
 import {useReducer} from "react";
 import {createApp} from "./initialState";
 import {isFirst, isLast, nextItem, previousItem} from "../utils/array";
@@ -14,6 +14,7 @@ import {
   isRoot,
   setNodeIsHidden
 } from "./treeUtils";
+import {Video} from "../api";
 
 
 const initial: AppState = {
@@ -23,6 +24,21 @@ const initial: AppState = {
 };
 
 export const reducer = (state: AppState, action: Action): AppState => {
+
+  if (action.type === 'SET_NODES') {
+    const videos: Video[] = (action as any).videos;
+    const tree: TreeNode = {};
+    videos.forEach(v => {
+      tree[v.id] = {
+        ...v,
+      };
+    });
+    return {
+      selectedNode: videos[0].id,
+      nodes: tree,
+      rootNodes: videos.map(v => v.id)
+    }
+  }
 
   if (
     action.type === 'ArrowUp' && isFirst(state.rootNodes, state.selectedNode) ||

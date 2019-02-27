@@ -1,4 +1,7 @@
 import React, {useEffect, useState} from 'react';
+import {searchVideos, Video} from "./api";
+import Sandbox from './Sandbox';
+import {useAppState} from "./Sandbox/state";
 
 const App = () => {
   const [text, setText] = useState('');
@@ -6,25 +9,27 @@ const App = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [artists, setArtists] = useState([] as Video[]);
 
+  const [app, dispatch] = useAppState();
+
   useEffect(() => {
     if (value) {
       setIsSearching(true);
       searchVideos(value).then(videos => {
         setIsSearching(false);
-        setArtists(videos);
+        dispatch({type: 'SET_NODES', videos});
       });
     }
   }, [value]);
 
   return (<div>
-    <input value={text} onChange={e => setText(e.target.value)} type="text" style={{width: '100%'}}/>
+    <input tabIndex={1} value={text} onChange={e => setText(e.target.value)} type="text" style={{width: '100%'}}/>
     {
-      isSearching && 'Searching...'
+      isSearching ? 'Searching...' : ' '
     }
     {
       artists.map(a => <div key={a.id}>{a.text}</div>)
     }
-    {/*<Sandbox/>*/}
+    <Sandbox app={app} dispatch={dispatch}/>
   </div>);
 };
 
@@ -47,21 +52,6 @@ function useDebounce(value: any, delay: number) {
   return debouncedValue;
 }
 
-
-interface Video {
-  text: string;
-  id: string;
-}
-
-const searchVideos = (term: string): Promise<Video[]> =>
-  new Promise(resolve => {
-    const videos: Video[] = [
-      {id: 'Result 1' + term, text: 'Result 1' + term},
-      {id: 'Result 2' + term, text: 'Result 2' + term},
-      {id: 'Result 3' + term, text: 'Result 3' + term},
-    ];
-    setTimeout(() => resolve(videos), 2000);
-  });
 
 export default App;
 
