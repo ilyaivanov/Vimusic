@@ -29,17 +29,25 @@ const initial: AppState = {
 };
 
 
-const reducer = (state: AppState, action: Action): AppState => {
-  if (action.type === 'ArrowDown')
-    return {
-      ...state,
-      selectedNode: state.nodes[state.nodes.length - 1].id,
-    };
-  if (action.type === 'ArrowUp')
-    return {
-      ...state,
-      selectedNode: state.nodes[0].id,
-    };
+export const reducer = (state: AppState, action: Action): AppState => {
+  if (action.type === 'ArrowDown') {
+    const selectedNodeIndex = getSelectedIndex(state);
+    if (selectedNodeIndex != state.nodes.length - 1) {
+      return {
+        ...state,
+        selectedNode: state.nodes[selectedNodeIndex + 1].id,
+      };
+    }
+  }
+  if (action.type === 'ArrowUp') {
+    const selectedNodeIndex = getSelectedIndex(state);
+    if (selectedNodeIndex != 0) {
+      return {
+        ...state,
+        selectedNode: state.nodes[selectedNodeIndex - 1].id,
+      };
+    }
+  }
   return state;
 };
 
@@ -48,3 +56,5 @@ export const useAppState = () => {
   return useReducer(reducer, initial);
 };
 
+const getSelectedIndex = (state: AppState) =>
+  state.nodes.findIndex(n => n.id === state.selectedNode);
