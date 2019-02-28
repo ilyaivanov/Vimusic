@@ -1,4 +1,6 @@
-import {Video} from "../api";
+import { Video } from "../api";
+
+export type Dispatch = (action: Action) => void;
 
 export interface AppState {
   nodes: TreeNode;
@@ -15,19 +17,29 @@ export interface TreeDefinition {
   children?: string[];
   text: string;
   isChildrenHidden?: boolean;
+  isEditing?: boolean;
 }
 
-export type ActionType = 'ArrowDown' | 'ArrowUp' | 'ArrowRight' | 'ArrowLeft';
-
+export type ActionType =
+  | "ArrowDown"
+  | "ArrowUp"
+  | "ArrowRight"
+  | "ArrowLeft"
+  | "SAMPLE";
 
 export interface PlainAction {
   type: ActionType;
 }
 
-
 export interface SetAction {
-  type: 'SET_NODES',
-  videos: Video[]
+  type: "SET_NODES";
+  videos: Video[];
 }
 
-export type Action = PlainAction | SetAction;
+export interface EditAction {
+  type: "EditNode";
+  nodeId: string;
+  props: Partial<TreeDefinition>;
+}
+
+export type Action = PlainAction | SetAction | EditAction;

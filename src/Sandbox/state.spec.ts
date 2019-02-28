@@ -1,26 +1,21 @@
-import {reducer} from './state';
-import {AppState} from "./types";
-import {createApp} from "./initialState";
-import {isNodeHidden, setNodeIsHidden} from "./treeUtils";
-
+import { reducer } from "./state";
+import { AppState } from "./types";
+import { createApp } from "./initialState";
+import { isNodeHidden, updateNode } from "./treeUtils";
 
 const createState = (selected: string): AppState => ({
   selectedNode: selected,
   nodes: createApp(),
-  rootNodes: ['1', '2', '3']
+  rootNodes: ["1", "2", "3"]
 });
 
-const moveUp = (state: AppState) =>
-  reducer(state, {type: 'ArrowUp'});
+const moveUp = (state: AppState) => reducer(state, { type: "ArrowUp" });
 
-const moveDown = (state: AppState) =>
-  reducer(state, {type: 'ArrowDown'});
+const moveDown = (state: AppState) => reducer(state, { type: "ArrowDown" });
 
-const moveRight = (state: AppState) =>
-  reducer(state, {type: 'ArrowRight'});
+const moveRight = (state: AppState) => reducer(state, { type: "ArrowRight" });
 
-const moveLeft = (state: AppState) =>
-  reducer(state, {type: 'ArrowLeft'});
+const moveLeft = (state: AppState) => reducer(state, { type: "ArrowLeft" });
 
 const verifyMoveDown = (initialPosition: string, expectedPosition: string) => {
   const state = createState(initialPosition);
@@ -32,7 +27,6 @@ const verifyMoveUp = (initialPosition: string, expectedPosition: string) => {
   expect(moveUp(state).selectedNode).toEqual(expectedPosition);
 };
 
-
 //1
 //  1.1
 //    1.1.1
@@ -42,149 +36,138 @@ const verifyMoveUp = (initialPosition: string, expectedPosition: string) => {
 //  3.1
 //  3.2
 
-describe('Having a default navigation tree state', () => {
+describe("Having a default navigation tree state", () => {
+  describe("when moving down", () => {
+    test("from 1 should move to 1.1", () => verifyMoveDown("1", "1.1"));
 
-  describe('when moving down', () => {
-    test('from 1 should move to 1.1', () =>
-      verifyMoveDown('1', '1.1'));
+    test("from 1.1 should move to 1.1.1", () => verifyMoveDown("1.1", "1.1.1"));
 
-    test('from 1.1 should move to 1.1.1', () =>
-      verifyMoveDown('1.1', '1.1.1'));
+    test("from 1.1.1 should move to 1.1.2", () =>
+      verifyMoveDown("1.1.1", "1.1.2"));
 
-    test('from 1.1.1 should move to 1.1.2', () =>
-      verifyMoveDown('1.1.1', '1.1.2'));
+    test("from 1.1.2 should move to 2", () => verifyMoveDown("1.1.2", "2"));
 
-    test('from 1.1.2 should move to 2', () =>
-      verifyMoveDown('1.1.2', '2'));
+    test("from 2 should move to 3", () => verifyMoveDown("2", "3"));
 
-    test('from 2 should move to 3', () =>
-      verifyMoveDown('2', '3'));
+    test("from 3 should move to 3.1", () => verifyMoveDown("3", "3.1"));
 
-    test('from 3 should move to 3.1', () =>
-      verifyMoveDown('3', '3.1'));
+    test("from 3.1 should move to 3,2", () => verifyMoveDown("3.1", "3.2"));
 
-    test('from 3.1 should move to 3,2', () =>
-      verifyMoveDown('3.1', '3.2'));
-
-    test('from 3.2 should move to 3.2', () =>
-      verifyMoveDown('3.2', '3.2'));
+    test("from 3.2 should move to 3.2", () => verifyMoveDown("3.2", "3.2"));
   });
 
-  describe('when moving up', () => {
-    test('from 1 should move to 1', () =>
-      verifyMoveUp('1', '1'));
+  describe("when moving up", () => {
+    test("from 1 should move to 1", () => verifyMoveUp("1", "1"));
 
-    test('from 1.1 should move to 1', () =>
-      verifyMoveUp('1.1', '1'));
+    test("from 1.1 should move to 1", () => verifyMoveUp("1.1", "1"));
 
-    test('from 1.1.1 should move to 1.1', () =>
-      verifyMoveUp('1.1.1', '1.1'));
+    test("from 1.1.1 should move to 1.1", () => verifyMoveUp("1.1.1", "1.1"));
 
-    test('from 1.1.2 should move to 1.1.1', () =>
-      verifyMoveUp('1.1.2', '1.1.1'));
+    test("from 1.1.2 should move to 1.1.1", () =>
+      verifyMoveUp("1.1.2", "1.1.1"));
 
-    test('from 2 should move to 1.1.2', () =>
-      verifyMoveUp('2', '1.1.2'));
+    test("from 2 should move to 1.1.2", () => verifyMoveUp("2", "1.1.2"));
 
-    test('from 3 should move to 2', () =>
-      verifyMoveUp('3', '2'));
+    test("from 3 should move to 2", () => verifyMoveUp("3", "2"));
 
-    test('from 3.1 should move to 3', () =>
-      verifyMoveUp('3.1', '3'));
+    test("from 3.1 should move to 3", () => verifyMoveUp("3.1", "3"));
 
-    test('from 3.2 should move to 3.1', () =>
-      verifyMoveUp('3.2', '3.1'));
+    test("from 3.2 should move to 3.1", () => verifyMoveUp("3.2", "3.1"));
   });
 
-  describe('when moving right', () => {
-    describe('on node 1.1', () => {
-      it('node 1.1.1 should be selected (since node 1.1 has children)', () => {
-        const state = createState('1.1');
-        expect(moveRight(state).selectedNode).toEqual('1.1.1');
+  describe("when moving right", () => {
+    describe("on node 1.1", () => {
+      it("node 1.1.1 should be selected (since node 1.1 has children)", () => {
+        const state = createState("1.1");
+        expect(moveRight(state).selectedNode).toEqual("1.1.1");
       });
     });
 
-    describe('on node 1.1.1', () => {
+    describe("on node 1.1.1", () => {
       let newState: AppState;
       beforeEach(() => {
-        const state = createState('1.1.1');
+        const state = createState("1.1.1");
         newState = newState = moveRight(state);
       });
 
-      it('node 1.1.1 should still be selected', () => {
-        expect(newState.selectedNode).toEqual('1.1.1');
+      it("node 1.1.1 should still be selected", () => {
+        expect(newState.selectedNode).toEqual("1.1.1");
       });
 
-      it('new nodes should be added', () => {
-        expect(newState.nodes['1.1.1.1'].id).toEqual('1.1.1.1');
-        expect(newState.nodes['1.1.1.2'].id).toEqual('1.1.1.2');
-        expect(newState.nodes['1.1.1.3'].id).toEqual('1.1.1.3');
+      it("new nodes should be added", () => {
+        expect(newState.nodes["1.1.1.1"].id).toEqual("1.1.1.1");
+        expect(newState.nodes["1.1.1.2"].id).toEqual("1.1.1.2");
+        expect(newState.nodes["1.1.1.3"].id).toEqual("1.1.1.3");
       });
 
-      it('children of 1.1.1 should be updated', () => {
-        expect(newState.nodes['1.1.1'].children).toEqual(['1.1.1.1', '1.1.1.2', '1.1.1.3']);
+      it("children of 1.1.1 should be updated", () => {
+        expect(newState.nodes["1.1.1"].children).toEqual([
+          "1.1.1.1",
+          "1.1.1.2",
+          "1.1.1.3"
+        ]);
       });
     });
   });
 
-
-  describe('when moving left', () => {
-    it('on node 1.1.1 should select parent', () => {
-      const state = createState('1.1.1');
-      expect(moveLeft(state).selectedNode).toEqual('1.1');
+  describe("when moving left", () => {
+    it("on node 1.1.1 should select parent", () => {
+      const state = createState("1.1.1");
+      expect(moveLeft(state).selectedNode).toEqual("1.1");
     });
 
-    it('on node 1 should hide node 1', () => {
-      const state = moveLeft(createState('1'));
-      expect(state.selectedNode).toEqual('1');
-      expect(isNodeHidden(state, '1')).toEqual(true);
+    it("on node 1 should hide node 1", () => {
+      const state = moveLeft(createState("1"));
+      expect(state.selectedNode).toEqual("1");
+      expect(isNodeHidden(state, "1")).toEqual(true);
     });
 
-    it('on node 3 should do nothing', () => {
-      const state = createState('3');
-      expect(moveLeft(state).selectedNode).toEqual('3');
+    it("on node 3 should do nothing", () => {
+      const state = createState("3");
+      expect(moveLeft(state).selectedNode).toEqual("3");
     });
-  });
-
-});
-
-describe('moving left from node 2', () => {
-  it('should do nothing', () => {
-    expect(moveLeft(createState('2')).selectedNode).toEqual('2');
   });
 });
 
-describe('Moving left from 1.1 node ', () => {
+describe("moving left from node 2", () => {
+  it("should do nothing", () => {
+    expect(moveLeft(createState("2")).selectedNode).toEqual("2");
+  });
+});
+
+describe("Moving left from 1.1 node ", () => {
   let movedLeft: AppState;
 
   beforeEach(() => {
-    movedLeft = moveLeft(createState('1.1'));
+    movedLeft = moveLeft(createState("1.1"));
   });
 
-  it('should hide children on that node', () => {
-    expect(movedLeft.nodes['1.1'].isChildrenHidden).toEqual(true);
+  it("should hide children on that node", () => {
+    expect(movedLeft.nodes["1.1"].isChildrenHidden).toEqual(true);
   });
 
-  it('moving down should ignore hidden nodes and select 2', () => {
-    expect(moveDown(movedLeft).selectedNode).toEqual('2');
+  it("moving down should ignore hidden nodes and select 2", () => {
+    expect(moveDown(movedLeft).selectedNode).toEqual("2");
   });
 
-  describe('moving right', () => {
-    it('moving right should show children on that node', () => {
-      expect(moveRight(movedLeft).nodes['1.1'].isChildrenHidden).toEqual(false);
+  describe("moving right", () => {
+    it("moving right should show children on that node", () => {
+      expect(moveRight(movedLeft).nodes["1.1"].isChildrenHidden).toEqual(false);
     });
   });
 
-  describe('moving left again', () => {
-    it('should select parent', () => {
-      expect(moveLeft(movedLeft).selectedNode).toEqual('1');
+  describe("moving left again", () => {
+    it("should select parent", () => {
+      expect(moveLeft(movedLeft).selectedNode).toEqual("1");
     });
   });
 });
 
-describe('when node 1.1 is hidden and node 2 is selected', () => {
-  it('moving up should select 1.1 node and not 1.1.2 node', () => {
-    const state = setNodeIsHidden(createState('2'), '1.1', true);
-    expect(moveUp(state).selectedNode).toEqual('1.1');
+describe("when node 1.1 is hidden and node 2 is selected", () => {
+  it("moving up should select 1.1 node and not 1.1.2 node", () => {
+    const state = updateNode(createState("2"), "1.1", {
+      isChildrenHidden: true
+    });
+    expect(moveUp(state).selectedNode).toEqual("1.1");
   });
 });

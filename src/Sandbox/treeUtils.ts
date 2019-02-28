@@ -1,14 +1,15 @@
-import {AppState, TreeDefinition, TreeNode} from "./types";
-import {contains, last} from "../utils/array";
+import { AppState, TreeDefinition, TreeNode } from "./types";
+import { contains, last } from "../utils/array";
 
 export const getContext = (state: AppState, nodeId: string): string[] => {
-  if (state.rootNodes.indexOf(nodeId) >= 0)
-    return state.rootNodes;
+  if (state.rootNodes.indexOf(nodeId) >= 0) return state.rootNodes;
   const parentKey = getParentKey(state, nodeId);
-  const {children} = state.nodes[parentKey];
+  const { children } = state.nodes[parentKey];
 
   if (!children)
-    throw new Error(`No children found for ${nodeId} and it doesn't exist in the root`);
+    throw new Error(
+      `No children found for ${nodeId} and it doesn't exist in the root`
+    );
 
   return children;
 };
@@ -20,21 +21,22 @@ export interface Parent {
 
 export const getParentContext = (state: AppState, nodeId: string): Parent => {
   let parentKey = getParentKey(state, nodeId);
-  while (!isRoot(state, parentKey) && last(getContext(state, parentKey)) == parentKey) {
+  while (
+    !isRoot(state, parentKey) &&
+    last(getContext(state, parentKey)) == parentKey
+  ) {
     parentKey = getParentKey(state, parentKey);
   }
-  return {parent: parentKey, context: getContext(state, parentKey)};
+  return { parent: parentKey, context: getContext(state, parentKey) };
 };
 
 export const getParentKey = (state: AppState, nodeId: string) => {
-  const key = Object
-    .keys(state.nodes)
-    .find(key => contains(state.nodes[key].children, nodeId));
-  if (!key)
-    throw new Error(`Couldn't find parent id for ${nodeId}`);
+  const key = Object.keys(state.nodes).find(key =>
+    contains(state.nodes[key].children, nodeId)
+  );
+  if (!key) throw new Error(`Couldn't find parent id for ${nodeId}`);
   return key;
 };
-
 
 export const getDeepestChild = (state: AppState, nodeId?: string) => {
   let node = nodeId || last(state.rootNodes);
@@ -56,12 +58,15 @@ export const getChildren = (state: AppState, nodeId: string): string[] => {
 export const isRoot = (state: AppState, nodeId: string) =>
   contains(state.rootNodes, nodeId);
 
-
-export const appendNodes = (tree: TreeNode, nodeId: string, newNodes: TreeDefinition[]): TreeNode => {
-  const newTree = {...tree};
+export const appendNodes = (
+  tree: TreeNode,
+  nodeId: string,
+  newNodes: TreeDefinition[]
+): TreeNode => {
+  const newTree = { ...tree };
   newTree[nodeId] = {
     ...newTree[nodeId],
-    children: newNodes.map(n => n.id),
+    children: newNodes.map(n => n.id)
   };
   newNodes.forEach(node => {
     newTree[node.id] = node;
@@ -69,19 +74,22 @@ export const appendNodes = (tree: TreeNode, nodeId: string, newNodes: TreeDefini
   return newTree;
 };
 
-
-export const setNodeIsHidden = (state: AppState, nodeId: string, isHidden: boolean) => {
+export const updateNode = (
+  state: AppState,
+  nodeId: string,
+  props: Partial<TreeDefinition>
+) => {
   return {
     ...state,
     nodes: {
       ...state.nodes,
       [nodeId]: {
         ...state.nodes[nodeId],
-        isChildrenHidden: isHidden
+        ...props
       }
     }
-  }
-}
+  };
+};
 
 export const isNodeHidden = (state: AppState, nodeId: string) =>
   state.nodes[nodeId].isChildrenHidden;

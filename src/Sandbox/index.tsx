@@ -1,30 +1,52 @@
-import React, {useEffect, useState} from "react";
-import {List} from "./List";
-import {Action, ActionType, AppState} from "./types";
+import React, { useState } from "react";
+import { useAppStateFromContext } from "../App";
+import { contains } from "../utils/array";
+import { useKeyboard } from "./hooks";
+import { List } from "./List";
+import { ActionType } from "./types";
 
-type Dispatch = (action: Action) => void;
+export default () => {
+  const [app, dispatch] = useAppStateFromContext();
 
-export default ({app, dispatch}: { app: AppState, dispatch: Dispatch }) => {
   const [focus, setFocus] = useState(false);
 
-  useKeyboard(event => {
-    if (focus) {
-      dispatch({type: event.code as ActionType});
-    }
-  }, [focus]);
+  useKeyboard(
+    event => {
+      if (focus) {
+        if (event.code === "F2") {
+          dispatch({
+            type: "EditNode",
+            nodeId: app.selectedNode,
+            props: { isEditing: true }
+          });
+        }
+        if (
+          contains(["Enter", "ArrowDown", "ArrowUp"], event.code) &&
+          app.nodes[app.selectedNode].isEditing
+        ) {
+          dispatch({
+            type: "EditNode",
+            nodeId: app.selectedNode,
+            props: { isEditing: false }
+          });
+        }
+        dispatch({ type: event.code as ActionType });
+      }
+    },
+    [focus, app]
+  );
 
-  return <div tabIndex={2} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}>
-    <List nodes={app.nodes} nodeToShow={app.rootNodes} selectedId={app.selectedNode}/>
-  </div>;
-}
-
-
-//Hooks
-const useKeyboard = (handleEvent: (event: DocumentEventMap['keydown']) => void, deps: {}[]) => {
-  return useEffect(() => {
-    window.document.addEventListener('keydown', handleEvent);
-    return () => {
-      window.document.removeEventListener('keydown', handleEvent);
-    };
-  }, deps);
+  return (
+    <div
+      tabIndex={2}
+      onFocus={() => setFocus(true)}
+      onBlur={() => setFocus(false)}
+    >
+      <List
+        nodes={app.nodes}
+        nodesToShow={app.rootNodes}
+        selectedId={app.selectedNode}
+      />
+    </div>
+  );
 };
