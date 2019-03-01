@@ -4,8 +4,9 @@ import {useDebounce} from "../utils/hooks";
 import {searchVideos} from "../api";
 import Tree from "../components/Tree";
 import Focusable from "../components/Focusable";
+import {TreeDefinition} from "../Sandbox/types";
 
-export default ({onTreeKeyPress}:any) => {
+export default ({onTreeKeyPress}: any) => {
   const [app, dispatch] = useAppStateFromContext();
   const [text, setText] = useState("");
   const value = useDebounce(text, 500);
@@ -16,7 +17,12 @@ export default ({onTreeKeyPress}:any) => {
       setIsSearching(true);
       searchVideos(value).then(videos => {
         setIsSearching(false);
-        dispatch({type: "SET_NODES", videos});
+        const nodes: TreeDefinition[] = videos.map(v => ({
+          id: Math.random() + '',
+          text: v.text,
+          youtubeId: v.id
+        }));
+        dispatch({type: "SET_NODES", nodes});
       });
     }
   }, [value]);

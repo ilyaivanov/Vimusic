@@ -14,7 +14,6 @@ import {
   isRoot,
   updateNode
 } from "./treeUtils";
-import {Video} from "../api";
 
 const initial: AppState = {
   nodes: createApp(),
@@ -24,17 +23,17 @@ const initial: AppState = {
 
 export const reducer = (state: AppState, action: Action): AppState => {
   if (action.type === "SET_NODES") {
-    const videos: Video[] = (action as any).videos;
+    const {nodes}= action;
     const tree: TreeNode = {};
-    videos.forEach(v => {
+    nodes.forEach(v => {
       tree[v.id] = {
         ...v
       };
     });
     return {
-      selectedNode: videos[0].id,
+      selectedNode: nodes[0].id,
       nodes: tree,
-      rootNodes: videos.map(v => v.id)
+      rootNodes: nodes.map(v => v.id)
     };
   }
 

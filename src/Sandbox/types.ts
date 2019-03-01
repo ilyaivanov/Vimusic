@@ -16,6 +16,7 @@ export interface TreeDefinition {
   id: string;
   children?: string[];
   text: string;
+  youtubeId?: string;
   isChildrenHidden?: boolean;
   isEditing?: boolean;
 }
@@ -33,7 +34,7 @@ export interface PlainAction {
 
 export interface SetAction {
   type: "SET_NODES";
-  videos: Video[];
+  nodes: TreeDefinition[];
 }
 
 export interface EditAction {
