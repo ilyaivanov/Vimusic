@@ -1,38 +1,12 @@
-import React, { Fragment, useRef, useEffect } from "react";
-import { TreeNode } from "./types";
-import { useAppStateFromContext } from "../App";
-
-interface Props {
-  nodes: TreeNode;
-  nodesToShow: string[];
-  selectedId: string;
-  level?: number;
-}
-
-export const List = ({ nodes, selectedId, nodesToShow, level = 0 }: Props) => (
-  <Fragment>
-    {nodesToShow.map(n => (
-      <Fragment key={n}>
-        <RowItem nodeId={n} level={level} />
-        {nodes[n].children && !nodes[n].isChildrenHidden && (
-          <List
-            nodes={nodes}
-            nodesToShow={nodes[n].children as string[]}
-            selectedId={selectedId}
-            level={level + 1}
-          />
-        )}
-      </Fragment>
-    ))}
-  </Fragment>
-);
+import React, {useEffect, useRef} from "react";
+import {useAppStateFromContext} from "../SandboxContext";
 
 interface RowItemProps {
   level?: number;
   nodeId: string;
 }
 
-const RowItem = ({ level, nodeId }: RowItemProps) => {
+export const RowItem = ({level, nodeId}: RowItemProps) => {
   const [app, dispatch] = useAppStateFromContext();
 
   const node = app.nodes[nodeId];
@@ -41,7 +15,7 @@ const RowItem = ({ level, nodeId }: RowItemProps) => {
   const txt1 = useRef(null);
 
   useEffect(() => {
-    const { current } = txt1 as any;
+    const {current} = txt1 as any;
     if (current && node.isEditing) {
       current.focus();
     }
@@ -64,14 +38,14 @@ const RowItem = ({ level, nodeId }: RowItemProps) => {
             dispatch({
               type: "EditNode",
               nodeId: nodeId,
-              props: { isEditing: false }
+              props: {isEditing: false}
             })
           }
           onChange={e =>
             dispatch({
               type: "EditNode",
               nodeId: nodeId,
-              props: { text: e.target.value }
+              props: {text: e.target.value}
             })
           }
         />

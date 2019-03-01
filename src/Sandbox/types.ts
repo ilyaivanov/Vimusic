@@ -53,5 +53,10 @@ export interface DeleteAction {
   nodeId: string;
 }
 
+export interface SelectAction {
+  type: "SELECT_NODE";
+  nodeId: string;
+}
 
-export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction;
+
+export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction;

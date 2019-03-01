@@ -161,6 +161,13 @@ export const reducer = (state: AppState, action: Action): AppState => {
       nodes: newnodes
     }
   }
+
+  if(action.type === 'SELECT_NODE'){
+    return {
+      ...state,
+      selectedNode: action.nodeId
+    }
+  }
   return state;
 };
 
