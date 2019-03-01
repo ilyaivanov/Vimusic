@@ -1,4 +1,4 @@
-import { Video } from "../api";
+import {Video} from "../api";
 
 export type Dispatch = (action: Action) => void;
 
@@ -42,4 +42,16 @@ export interface EditAction {
   props: Partial<TreeDefinition>;
 }
 
-export type Action = PlainAction | SetAction | EditAction;
+export interface CreateAction {
+  type: "CreateNode";
+  placeBefore: string;
+  props: Partial<TreeDefinition>;
+}
+
+export interface DeleteAction {
+  type: "Delete";
+  nodeId: string;
+}
+
+
+export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction;

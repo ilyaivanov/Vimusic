@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { useAppStateFromContext } from "../App";
-import { contains } from "../utils/array";
-import { useKeyboard } from "./hooks";
-import { List } from "./List";
-import { ActionType } from "./types";
+import React, {useState} from "react";
+import {useAppStateFromContext} from "../App";
+import {contains} from "../utils/array";
+import {useKeyboard} from "./hooks";
+import {List} from "./List";
+import {ActionType} from "./types";
 
 export default () => {
   const [app, dispatch] = useAppStateFromContext();
@@ -12,12 +12,13 @@ export default () => {
 
   useKeyboard(
     event => {
+      console.log(event.code, focus)
       if (focus) {
         if (event.code === "F2") {
           dispatch({
             type: "EditNode",
             nodeId: app.selectedNode,
-            props: { isEditing: true }
+            props: {isEditing: true}
           });
         }
         if (
@@ -27,10 +28,21 @@ export default () => {
           dispatch({
             type: "EditNode",
             nodeId: app.selectedNode,
-            props: { isEditing: false }
+            props: {isEditing: false}
+          });
+        } else if (event.code === 'Enter') {
+          dispatch({
+            type: "CreateNode",
+            placeBefore: app.selectedNode,
+            props: {text: 'New Node', isEditing: true}
+          });
+        } else if (event.code === 'Backspace') {
+          dispatch({
+            type: "Delete",
+            nodeId: app.selectedNode
           });
         }
-        dispatch({ type: event.code as ActionType });
+        dispatch({type: event.code as ActionType});
       }
     },
     [focus, app]

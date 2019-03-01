@@ -4,6 +4,7 @@ import { TreeDefinition, TreeNode } from "./types";
 //  1.1
 //    1.1.1
 //    1.1.2
+//    1.1.3
 //2
 //3
 //  3.1
@@ -11,9 +12,10 @@ import { TreeDefinition, TreeNode } from "./types";
 
 export const createApp = (): TreeNode => ({
   ...createNodeEntry("1", { children: ["1.1"] }),
-  ...createNodeEntry("1.1", { children: ["1.1.1", "1.1.2"] }),
+  ...createNodeEntry("1.1", { children: ["1.1.1", "1.1.2", '1.1.3'] }),
   ...createNodeEntry("1.1.1"),
   ...createNodeEntry("1.1.2"),
+  ...createNodeEntry("1.1.3"),
   ...createNodeEntry("2"),
   ...createNodeEntry("3", { children: ["3.1", "3.2"] }),
   ...createNodeEntry("3.1"),

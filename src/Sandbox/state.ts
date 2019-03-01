@@ -1,7 +1,7 @@
-import { Action, AppState, TreeNode } from "./types";
-import { useReducer } from "react";
-import { createApp } from "./initialState";
-import { isFirst, isLast, nextItem, previousItem } from "../utils/array";
+import {Action, AppState, TreeNode} from "./types";
+import {useReducer} from "react";
+import {createApp} from "./initialState";
+import {getPrevious, insertBefore, isFirst, isLast, nextItem, previousItem, removeItem} from "../utils/array";
 import {
   appendNodes,
   getChildren,
@@ -14,7 +14,7 @@ import {
   isRoot,
   updateNode
 } from "./treeUtils";
-import { Video } from "../api";
+import {Video} from "../api";
 
 const initial: AppState = {
   nodes: createApp(),
@@ -23,8 +23,6 @@ const initial: AppState = {
 };
 
 export const reducer = (state: AppState, action: Action): AppState => {
-  console.log(action);
-
   if (action.type === "SET_NODES") {
     const videos: Video[] = (action as any).videos;
     const tree: TreeNode = {};
@@ -51,7 +49,7 @@ export const reducer = (state: AppState, action: Action): AppState => {
 
   if (action.type === "ArrowRight") {
     if (state.nodes[state.selectedNode].isChildrenHidden) {
-      return updateNode(state, state.selectedNode, { isChildrenHidden: false });
+      return updateNode(state, state.selectedNode, {isChildrenHidden: false});
     }
     if (hasChildren(state, state.selectedNode)) {
       return setSelectedNode(state, getChildren(state, state.selectedNode)[0]);
@@ -68,7 +66,7 @@ export const reducer = (state: AppState, action: Action): AppState => {
       !isNodeHidden(state, state.selectedNode) &&
       hasChildren(state, state.selectedNode)
     ) {
-      return updateNode(state, state.selectedNode, { isChildrenHidden: true });
+      return updateNode(state, state.selectedNode, {isChildrenHidden: true});
     }
     if (isRoot(state, state.selectedNode)) return state;
     return setSelectedNode(state, getParentKey(state, state.selectedNode));
@@ -107,7 +105,74 @@ export const reducer = (state: AppState, action: Action): AppState => {
   if (action.type == "EditNode") {
     return updateNode(state, action.nodeId, action.props);
   }
+  if (action.type == "CreateNode") {
+    const newId = action.props.id || Math.random() + '';
+    const withNode = updateNode(state, newId, {
+      ...action.props,
+      id: newId,
+    });
+    if (isRoot(state, action.placeBefore)) {
+      withNode.rootNodes = insertBefore(withNode.rootNodes, action.placeBefore, newId);
+    } else {
+      withNode.nodes[getParentKey(state, action.placeBefore)] = {
+        ...withNode.nodes[getParentKey(state, action.placeBefore)],
+        children:
+        // @ts-ignore
+          insertBefore(withNode.nodes[getParentKey(state, action.placeBefore)].children, action.placeBefore, newId)
+      };
+    }
+    withNode.selectedNode = newId;
+    return withNode;
+  }
+
+  if (action.type == 'Delete') {
+    // const parent =
+    const newnodes = {
+      ...state.nodes,
+    };
+    const context = getContext(state, action.nodeId);
+
+    let nextSelectedNode: string;
+    if (context.length === 1) {
+      nextSelectedNode = getParentKey(state, action.nodeId);
+    } else if (isFirst(context, action.nodeId)) {
+      nextSelectedNode = context[1];
+    } else {
+      nextSelectedNode = getPrevious(context, action.nodeId);
+    }
+
+    deleteAllChildren(newnodes, action.nodeId);
+
+    delete newnodes[action.nodeId];
+
+
+    //TODO: remove state mutation
+    let newRoot = state.rootNodes;
+    if (isRoot(state, action.nodeId)) {
+      removeItem(newRoot, action.nodeId);
+    } else {
+      removeItem(newnodes[getParentKey(state, action.nodeId)].children, action.nodeId);
+    }
+
+    return {
+      ...state,
+      rootNodes: newRoot,
+      selectedNode: nextSelectedNode,
+      nodes: newnodes
+    }
+  }
   return state;
+};
+
+const deleteAllChildren = (tree: TreeNode, nodeId: string) => {
+  const children = tree[nodeId].children;
+  if (children) {
+    children.forEach(c => {
+      deleteAllChildren(tree, c);
+
+      delete tree[c];
+    });
+  }
 };
 
 export const useAppState = () => {

@@ -1,7 +1,7 @@
-import { reducer } from "./state";
-import { AppState } from "./types";
-import { createApp } from "./initialState";
-import { isNodeHidden, updateNode } from "./treeUtils";
+import {reducer} from "./state";
+import {AppState} from "./types";
+import {createApp} from "./initialState";
+import {isNodeHidden, updateNode} from "./treeUtils";
 
 const createState = (selected: string): AppState => ({
   selectedNode: selected,
@@ -9,13 +9,13 @@ const createState = (selected: string): AppState => ({
   rootNodes: ["1", "2", "3"]
 });
 
-const moveUp = (state: AppState) => reducer(state, { type: "ArrowUp" });
+const moveUp = (state: AppState) => reducer(state, {type: "ArrowUp"});
 
-const moveDown = (state: AppState) => reducer(state, { type: "ArrowDown" });
+const moveDown = (state: AppState) => reducer(state, {type: "ArrowDown"});
 
-const moveRight = (state: AppState) => reducer(state, { type: "ArrowRight" });
+const moveRight = (state: AppState) => reducer(state, {type: "ArrowRight"});
 
-const moveLeft = (state: AppState) => reducer(state, { type: "ArrowLeft" });
+const moveLeft = (state: AppState) => reducer(state, {type: "ArrowLeft"});
 
 const verifyMoveDown = (initialPosition: string, expectedPosition: string) => {
   const state = createState(initialPosition);
@@ -27,52 +27,57 @@ const verifyMoveUp = (initialPosition: string, expectedPosition: string) => {
   expect(moveUp(state).selectedNode).toEqual(expectedPosition);
 };
 
-//1
-//  1.1
-//    1.1.1
-//    1.1.2
-//2
-//3
-//  3.1
-//  3.2
-
 describe("Having a default navigation tree state", () => {
   describe("when moving down", () => {
-    test("from 1 should move to 1.1", () => verifyMoveDown("1", "1.1"));
+    test("from 1 should move to 1.1", () =>
+      verifyMoveDown("1", "1.1"));
 
-    test("from 1.1 should move to 1.1.1", () => verifyMoveDown("1.1", "1.1.1"));
+    test("from 1.1 should move to 1.1.1", () =>
+      verifyMoveDown("1.1", "1.1.1"));
 
     test("from 1.1.1 should move to 1.1.2", () =>
       verifyMoveDown("1.1.1", "1.1.2"));
 
-    test("from 1.1.2 should move to 2", () => verifyMoveDown("1.1.2", "2"));
+    test("from 1.1.3 should move to 2", () =>
+      verifyMoveDown("1.1.3", "2"));
 
-    test("from 2 should move to 3", () => verifyMoveDown("2", "3"));
+    test("from 2 should move to 3", () =>
+      verifyMoveDown("2", "3"));
 
-    test("from 3 should move to 3.1", () => verifyMoveDown("3", "3.1"));
+    test("from 3 should move to 3.1", () =>
+      verifyMoveDown("3", "3.1"));
 
-    test("from 3.1 should move to 3,2", () => verifyMoveDown("3.1", "3.2"));
+    test("from 3.1 should move to 3,2", () =>
+      verifyMoveDown("3.1", "3.2"));
 
-    test("from 3.2 should move to 3.2", () => verifyMoveDown("3.2", "3.2"));
+    test("from 3.2 should move to 3.2", () =>
+      verifyMoveDown("3.2", "3.2"));
   });
 
   describe("when moving up", () => {
-    test("from 1 should move to 1", () => verifyMoveUp("1", "1"));
+    test("from 1 should move to 1", () =>
+      verifyMoveUp("1", "1"));
 
-    test("from 1.1 should move to 1", () => verifyMoveUp("1.1", "1"));
+    test("from 1.1 should move to 1", () =>
+      verifyMoveUp("1.1", "1"));
 
-    test("from 1.1.1 should move to 1.1", () => verifyMoveUp("1.1.1", "1.1"));
+    test("from 1.1.1 should move to 1.1", () =>
+      verifyMoveUp("1.1.1", "1.1"));
 
     test("from 1.1.2 should move to 1.1.1", () =>
       verifyMoveUp("1.1.2", "1.1.1"));
 
-    test("from 2 should move to 1.1.2", () => verifyMoveUp("2", "1.1.2"));
+    test("from 2 should move to 1.1.2", () =>
+      verifyMoveUp("2", "1.1.3"));
 
-    test("from 3 should move to 2", () => verifyMoveUp("3", "2"));
+    test("from 3 should move to 2", () =>
+      verifyMoveUp("3", "2"));
 
-    test("from 3.1 should move to 3", () => verifyMoveUp("3.1", "3"));
+    test("from 3.1 should move to 3", () =>
+      verifyMoveUp("3.1", "3"));
 
-    test("from 3.2 should move to 3.1", () => verifyMoveUp("3.2", "3.1"));
+    test("from 3.2 should move to 3.1", () =>
+      verifyMoveUp("3.2", "3.1"));
   });
 
   describe("when moving right", () => {
@@ -169,5 +174,94 @@ describe("when node 1.1 is hidden and node 2 is selected", () => {
       isChildrenHidden: true
     });
     expect(moveUp(state).selectedNode).toEqual("1.1");
+  });
+});
+
+describe('creating a new node when 1.1 is selected', () => {
+  it('should create two children', () => {
+    const state = createState('1.1');
+    const newState = reducer(state, {type: 'CreateNode', placeBefore: '1.1', props: {text: '1.2', id: '1.2'}});
+    expect(newState.nodes['1.2'].text).toEqual('1.2');
+    expect(newState.nodes['1'].children).toEqual(['1.2', '1.1']);
+    expect(newState.selectedNode).toEqual('1.2');
+
+  });
+});
+
+describe('deleting a node 1.1 ', () => {
+  let state: AppState;
+  beforeEach(() => {
+    state = reducer(createState('1.1'), {type: 'Delete', nodeId: '1.1'});
+  });
+
+  it('should remove that node', () => {
+    expect(state.nodes['1.1']).toBeUndefined();
+  });
+
+  it('should remove if from the parent', () => {
+    expect(state.nodes['1'].children).toEqual([]);
+  });
+
+  it('should select node 1', () => {
+    expect(state.selectedNode).toEqual('1');
+  });
+
+  it('should remove all children', () => {
+    expect(state.nodes['1.1.1']).toBeUndefined();
+    expect(state.nodes['1.1.2']).toBeUndefined();
+    expect(state.nodes['1.1.3']).toBeUndefined();
+  });
+
+});
+
+it('deleting a node 1.1.1 should select node 1.1.2 (next if deleting first)', () => {
+  const state = reducer(createState('1.1.1'), {type: 'Delete', nodeId: '1.1.1'});
+  expect(state.selectedNode).toEqual('1.1.2');
+});
+
+it('deleting a node 1.1.2 should select node 1.1.1 (previous if exist)', () => {
+  const state = reducer(createState('1.1.2'), {type: 'Delete', nodeId: '1.1.2'});
+  expect(state.selectedNode).toEqual('1.1.1');
+});
+
+it('deleting a node 1.1.3 should select node 1.1.2 (previous if exist)', () => {
+  const state = reducer(createState('1.1.3'), {type: 'Delete', nodeId: '1.1.3'});
+  expect(state.selectedNode).toEqual('1.1.2');
+});
+
+describe('deleting a node 1', () => {
+  it('should remove all of the subchilds (including 1.1.1)', () => {
+    const state = reducer(createState('1'), {type: 'Delete', nodeId: '1'});
+    expect(state.nodes['1.1.1']).toBeUndefined();
+  });
+
+  it('should select 2', () => {
+    const state = reducer(createState('1'), {type: 'Delete', nodeId: '1'});
+    expect(state.selectedNode).toEqual('2');
+  });
+
+  it('should remove it from the root nodes', () => {
+    const state = reducer(createState('1'), {type: 'Delete', nodeId: '1'});
+    expect(state.rootNodes).toEqual(['2', '3']);
+  });
+});
+
+describe('deleting a node 3', () => {
+  it('should remove all of the subchilds (including 1.1.1)', () => {
+    const state = reducer(createState('3'), {type: 'Delete', nodeId: '3'});
+    expect(state.rootNodes).toEqual(['1', '2']);
+  });
+});
+
+
+describe('creating a new node before 1', () => {
+  it('should create node before 1', () => {
+    const state = reducer(createState('1'), {
+      type: "CreateNode",
+      placeBefore: '1',
+      props: {text: 'New Node', isEditing: true, id: 'myid'}
+    });
+
+    expect(state.rootNodes).toEqual(['myid', '1', '2', '3']);
   });
 });
