@@ -1,10 +1,10 @@
-import { AppState, TreeDefinition, TreeNode } from "./types";
-import { contains, last } from "../utils/array";
+import {AppState, TreeDefinition, TreeNode} from "./types";
+import {contains, last} from "../utils/array";
 
 export const getContext = (state: AppState, nodeId: string): string[] => {
   if (state.rootNodes.indexOf(nodeId) >= 0) return state.rootNodes;
   const parentKey = getParentKey(state, nodeId);
-  const { children } = state.nodes[parentKey];
+  const {children} = state.nodes[parentKey];
 
   if (!children)
     throw new Error(
@@ -24,10 +24,10 @@ export const getParentContext = (state: AppState, nodeId: string): Parent => {
   while (
     !isRoot(state, parentKey) &&
     last(getContext(state, parentKey)) == parentKey
-  ) {
+    ) {
     parentKey = getParentKey(state, parentKey);
   }
-  return { parent: parentKey, context: getContext(state, parentKey) };
+  return {parent: parentKey, context: getContext(state, parentKey)};
 };
 
 export const getParentKey = (state: AppState, nodeId: string) => {
@@ -63,7 +63,7 @@ export const appendNodes = (
   nodeId: string,
   newNodes: TreeDefinition[]
 ): TreeNode => {
-  const newTree = { ...tree };
+  const newTree = {...tree};
   newTree[nodeId] = {
     ...newTree[nodeId],
     children: newNodes.map(n => n.id)
@@ -93,3 +93,13 @@ export const updateNode = (
 
 export const isNodeHidden = (state: AppState, nodeId: string) =>
   state.nodes[nodeId].isChildrenHidden;
+
+
+export const isEditingCurrentNode = (state: AppState) =>
+  state.nodes[state.selectedNode].isEditing;
+
+export const createEmptyTree = (): AppState => ({
+  rootNodes: [],
+  selectedNode: '',
+  nodes: {}
+});

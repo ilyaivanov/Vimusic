@@ -1,9 +1,8 @@
 import {Action, AppState, TreeNode} from "./types";
 import {useReducer} from "react";
-import {createApp} from "./initialState";
 import {getPrevious, insertBefore, isFirst, isLast, nextItem, previousItem, removeItem} from "../utils/array";
 import {
-  appendNodes,
+  appendNodes, createEmptyTree,
   getChildren,
   getContext,
   getDeepestChild,
@@ -15,15 +14,9 @@ import {
   updateNode
 } from "./treeUtils";
 
-const initial: AppState = {
-  nodes: createApp(),
-  rootNodes: ["1", "2", "3"],
-  selectedNode: "1"
-};
-
 export const reducer = (state: AppState, action: Action): AppState => {
   if (action.type === "SET_NODES") {
-    const {nodes}= action;
+    const {nodes} = action;
     const tree: TreeNode = {};
     nodes.forEach(v => {
       tree[v.id] = {
@@ -110,7 +103,7 @@ export const reducer = (state: AppState, action: Action): AppState => {
       ...action.props,
       id: newId,
     });
-    if (isRoot(state, action.placeBefore)) {
+    if (state.rootNodes.length === 0 || isRoot(state, action.placeBefore)) {
       withNode.rootNodes = insertBefore(withNode.rootNodes, action.placeBefore, newId);
     } else {
       withNode.nodes[getParentKey(state, action.placeBefore)] = {
@@ -125,11 +118,18 @@ export const reducer = (state: AppState, action: Action): AppState => {
   }
 
   if (action.type == 'Delete') {
+    const context = getContext(state, action.nodeId);
+
+    //Roots are tricky special cases
+    if (isRoot(state, action.nodeId) && context.length === 1) {
+      return createEmptyTree();
+    }
+
+
     // const parent =
     const newnodes = {
       ...state.nodes,
     };
-    const context = getContext(state, action.nodeId);
 
     let nextSelectedNode: string;
     if (context.length === 1) {
@@ -161,7 +161,7 @@ export const reducer = (state: AppState, action: Action): AppState => {
     }
   }
 
-  if(action.type === 'SELECT_NODE'){
+  if (action.type === 'SELECT_NODE') {
     return {
       ...state,
       selectedNode: action.nodeId
@@ -182,7 +182,7 @@ const deleteAllChildren = (tree: TreeNode, nodeId: string) => {
 };
 
 export const useAppState = () => {
-  return useReducer(reducer, initial);
+  return useReducer(reducer, createEmptyTree());
 };
 
 const setSelectedNode = (state: AppState, selectedNode: string) => {

@@ -33,4 +33,35 @@
 //   dispatch({type: event.code as ActionType});
 // }
 
-export const sample = 1;
+import {AppStateActionCreator} from "../types";
+
+export const createNode: AppStateActionCreator = (state, dispatch) => {
+  dispatch({
+    type: "CreateNode",
+    placeBefore: state.selectedNode,
+    props: {text: 'New Node', isEditing: true}
+  });
+};
+
+export const startEditNode: AppStateActionCreator = (state, dispatch) => {
+  dispatch({
+    type: "EditNode",
+    nodeId: state.selectedNode,
+    props: {isEditing: true}
+  });
+};
+
+export const stopEditNode: AppStateActionCreator = (state, dispatch) => {
+  dispatch({
+    type: "EditNode",
+    nodeId: state.selectedNode,
+    props: {isEditing: false}
+  });
+};
+
+export const deleteNode: AppStateActionCreator = (state, dispatch) => {
+  dispatch({
+    type: "Delete",
+    nodeId: state.selectedNode
+  });
+};

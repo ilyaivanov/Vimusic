@@ -1,11 +1,11 @@
 import {reducer} from "./state";
 import {AppState} from "./types";
-import {createApp} from "./initialState";
 import {isNodeHidden, updateNode} from "./treeUtils";
+import {createTestInitialTree} from "./keyHandlers/testUtils";
 
 const createState = (selected: string): AppState => ({
   selectedNode: selected,
-  nodes: createApp(),
+  nodes: createTestInitialTree(),
   rootNodes: ["1", "2", "3"]
 });
 

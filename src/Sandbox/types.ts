@@ -1,5 +1,3 @@
-import {Video} from "../api";
-
 export type Dispatch = (action: Action) => void;
 
 export interface AppState {
@@ -61,3 +59,7 @@ export interface SelectAction {
 
 
 export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction;
+
+
+export type AppStateActionCreator = (state: AppState, dispatch: Dispatch) => void;
+

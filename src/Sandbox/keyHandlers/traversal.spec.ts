@@ -1,23 +1,5 @@
-import {Action, AppState} from "../types";
-import {reducer} from "../state";
-import {createApp} from "../initialState";
-import {onKeyPress} from "./index";
-
-const createState = (selected: string): AppState => ({
-  selectedNode: selected,
-  nodes: createApp(),
-  rootNodes: ["1", "2", "3"]
-});
-
-
-const simulateKeyboardPress = (initialPosition: string, code: string) => {
-  let state = createState(initialPosition);
-  const dummyDispatch = (action: Action) => {
-    state = reducer(state, action);
-  };
-  onKeyPress({code} as KeyboardEvent, state, dummyDispatch);
-  return state;
-};
+import {simulateKeyboardPress, simulateKeyboardPressForState} from "./testUtils";
+import {createEmptyTree} from "../treeUtils";
 
 const verifyMoveDown = (initialPosition: string, expectedPosition: string) => {
   const state = simulateKeyboardPress(initialPosition, 'ArrowDown');
@@ -80,4 +62,11 @@ describe("when moving down", () => {
 
   test("from 3.2 should move to 3.2", () =>
     verifyMoveDown("3.2", "3.2"));
+});
+
+describe('having an empty tree', () => {
+  it('when moving down nothing should happen', () => {
+    const state = simulateKeyboardPressForState(createEmptyTree(), 'ArrowDown');
+    expect(state).toEqual(createEmptyTree());
+  });
 });

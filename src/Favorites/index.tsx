@@ -1,11 +1,10 @@
 import React from "react";
 import Focusable from "../components/Focusable";
-import {onKeyPress} from "../Sandbox/keyHandlers";
 import {useAppStateFromContext} from "../SandboxContext";
 import Tree from "../components/Tree";
 
 export default ({onTreeKeyPress}: any) => {
-  const [app, dispatch] = useAppStateFromContext();
+  const [app] = useAppStateFromContext();
 
   return (
     <div>

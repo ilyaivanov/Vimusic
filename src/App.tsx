@@ -7,6 +7,7 @@ import {onKeyPress} from "./Sandbox/keyHandlers";
 import YoutubePlayer from "./components/Player";
 import {usePlayer} from "./state/player";
 import {AppState} from "./Sandbox/types";
+import {isEditingCurrentNode} from "./Sandbox/treeUtils";
 
 const App = () => {
   const [searchNodes, searchDispatch] = useAppState();
@@ -15,7 +16,7 @@ const App = () => {
   const [playerState, dispatchPlayAction] = usePlayer();
 
   const handlePlayerKeys = (event: KeyboardEvent, context: AppState) => {
-    if (event.code === 'KeyP') {
+    if (event.code === 'KeyP' && !isEditingCurrentNode(context)) {
       const node = context.nodes[context.selectedNode];
       if (!node.youtubeId) {
         console.warn(node, "Expected to have 'youtubeId' property, but it didn't");
@@ -26,12 +27,13 @@ const App = () => {
   };
 
   const onSearchKeyPressHandler = (event: KeyboardEvent) => {
-    if (event.code === 'KeyD') {
+    if (event.code === 'KeyD' && !isEditingCurrentNode(searchNodes)) {
       favoritesDispatch({
         type: 'CreateNode',
         placeBefore: favoritesNodes.rootNodes[0],
         props: {
           ...searchNodes.nodes[searchNodes.selectedNode],
+          children: [],
           id: Math.random() + '',
         }
       });
@@ -44,7 +46,6 @@ const App = () => {
     handlePlayerKeys(event, favoritesNodes);
     onKeyPress(event, favoritesNodes, favoritesDispatch);
   };
-
 
   return (
     <div>
