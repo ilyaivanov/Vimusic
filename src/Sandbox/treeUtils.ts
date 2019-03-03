@@ -94,6 +94,8 @@ export const updateNode = (
 export const isNodeHidden = (state: AppState, nodeId: string) =>
   state.nodes[nodeId].isChildrenHidden;
 
+export const isNodeLoading = (state: AppState, nodeId: string) =>
+  state.nodes[nodeId].isLoading;
 
 export const isEditingCurrentNode = (state: AppState) =>
   state.nodes[state.selectedNode].isEditing;

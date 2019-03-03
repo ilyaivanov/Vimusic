@@ -8,6 +8,7 @@ import {
   hasChildren,
   isEditingCurrentNode,
   isNodeHidden,
+  isNodeLoading,
   isRoot
 } from "../treeUtils";
 import {isFirst, isLast, nextItem, previousItem} from "../../utils/array";
@@ -78,6 +79,9 @@ function moveNodeUp(state: AppState, dispatch: Dispatch) {
 
 
 function moveNodeRight(state: AppState, dispatch: Dispatch) {
+  if (isNodeLoading(state, state.selectedNode))
+    return;
+
   if (!hasChildren(state, state.selectedNode)) {
     dispatch(startLoading(state.selectedNode));
 
