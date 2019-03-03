@@ -1,6 +1,5 @@
 import React from "react";
-import Search from "./Search";
-import Favorites from "./Favorites";
+import SearchInput from "./Search/SearchInput";
 import {SandboxContext} from "./SandboxContext";
 import {useAppState} from "./Sandbox/state";
 import {onKeyPress} from "./Sandbox/keyHandlers";
@@ -9,6 +8,7 @@ import {usePlayer} from "./state/player";
 import {AppState} from "./Sandbox/types";
 import {isEditingCurrentNode} from "./Sandbox/treeUtils";
 import Focusable from "./components/Focusable";
+import Tree from "./components/Tree";
 
 const App = () => {
   const [searchNodes, searchDispatch] = useAppState();
@@ -51,19 +51,22 @@ const App = () => {
   return (
     <div>
       <div style={{flexDirection: 'row', display: 'flex', alignItems: 'stretch', height: '100vh'}}>
-        <Focusable tabIndex={2} onKeyPress={onSearchKeyPressHandler}>
-          <SandboxContext app={searchNodes} dispatch={searchDispatch}>
-            <Search/>
-          </SandboxContext>
-        </Focusable>
+        <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+          <SearchInput onSearched={nodes => searchDispatch({type: "SET_NODES", nodes})}/>
+          <Focusable tabIndex={2} onKeyPress={onSearchKeyPressHandler}>
+            <SandboxContext app={searchNodes} dispatch={searchDispatch}>
+              <Tree app={searchNodes}/>
+            </SandboxContext>
+          </Focusable>
+        </div>
         <Focusable tabIndex={3} onKeyPress={onFavoritesKeyPressHandler}>
           <SandboxContext app={favoritesNodes} dispatch={favoritesDispatch}>
-            <Favorites app={favoritesNodes}/>
+            <div style={{textAlign: 'center'}}>Favorites</div>
+            <Tree app={favoritesNodes}/>
           </SandboxContext>
         </Focusable>
       </div>
       <YoutubePlayer visible id={playerState.youtubeVideoId}/>
-
     </div>
   );
 };

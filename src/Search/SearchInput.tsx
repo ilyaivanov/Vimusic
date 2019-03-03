@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {useAppStateFromContext} from "../SandboxContext";
 import {useDebounce} from "../utils/hooks";
 import {searchVideos} from "../api";
-import Tree from "../components/Tree";
-import {TreeDefinition} from "../Sandbox/types";
+import {Dispatch, TreeDefinition} from "../Sandbox/types";
 
-export default () => {
-  const [app, dispatch] = useAppStateFromContext();
+interface Props {
+  onSearched: (nodes: TreeDefinition[]) => void;
+}
+
+export default ({onSearched}: Props) => {
   const [text, setText] = useState("");
   const value = useDebounce(text, 500);
   const [isSearching, setIsSearching] = useState(false);
@@ -21,25 +22,18 @@ export default () => {
           text: v.text,
           youtubeId: v.id
         }));
-        dispatch({type: "SET_NODES", nodes});
+        onSearched(nodes);
       });
     }
   }, [value]);
 
   return (
-    <div>
-      <input
-        tabIndex={1}
-        value={text}
-        onChange={e => setText(e.target.value)}
-        type="text"
-        style={{width: '100%', boxSizing: 'border-box'}}
-      />
-      {
-        isSearching ? "Searching..." : " "
-      }
-
-      <Tree app={app}/>
-    </div>
+    <input
+      tabIndex={1}
+      value={text}
+      onChange={e => setText(e.target.value)}
+      type="text"
+      style={{width: '100%', boxSizing: 'border-box'}}
+    />
   );
 };
