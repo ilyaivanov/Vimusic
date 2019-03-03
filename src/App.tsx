@@ -8,6 +8,7 @@ import YoutubePlayer from "./components/Player";
 import {usePlayer} from "./state/player";
 import {AppState} from "./Sandbox/types";
 import {isEditingCurrentNode} from "./Sandbox/treeUtils";
+import Focusable from "./components/Focusable";
 
 const App = () => {
   const [searchNodes, searchDispatch] = useAppState();
@@ -49,17 +50,17 @@ const App = () => {
 
   return (
     <div>
-      <div style={{flexDirection: 'row', display: 'flex'}}>
-        <div style={{flex: 1}}>
+      <div style={{flexDirection: 'row', display: 'flex', alignItems: 'stretch', height: '100vh'}}>
+        <Focusable tabIndex={2} onKeyPress={onSearchKeyPressHandler}>
           <SandboxContext app={searchNodes} dispatch={searchDispatch}>
-            <Search onTreeKeyPress={onSearchKeyPressHandler}/>
+            <Search/>
           </SandboxContext>
-        </div>
-        <div style={{flex: 1}}>
+        </Focusable>
+        <Focusable tabIndex={3} onKeyPress={onFavoritesKeyPressHandler}>
           <SandboxContext app={favoritesNodes} dispatch={favoritesDispatch}>
-            <Favorites onTreeKeyPress={onFavoritesKeyPressHandler}/>
+            <Favorites app={favoritesNodes}/>
           </SandboxContext>
-        </div>
+        </Focusable>
       </div>
       <YoutubePlayer visible id={playerState.youtubeVideoId}/>
 

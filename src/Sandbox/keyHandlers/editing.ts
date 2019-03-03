@@ -33,7 +33,7 @@
 //   dispatch({type: event.code as ActionType});
 // }
 
-import {AppStateActionCreator} from "../types";
+import {Action, AppStateActionCreator} from "../types";
 
 export const createNode: AppStateActionCreator = (state, dispatch) => {
   dispatch({
@@ -65,3 +65,18 @@ export const deleteNode: AppStateActionCreator = (state, dispatch) => {
     nodeId: state.selectedNode
   });
 };
+export const startLoading = (nodeId: string): Action => ({
+  type: "EditNode",
+  nodeId,
+  props: {
+    isLoading: true
+  }
+});
+
+export const endLoading = (nodeId: string): Action => ({
+  type: "EditNode",
+  nodeId,
+  props: {
+    isLoading: false
+  }
+});

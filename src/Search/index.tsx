@@ -3,10 +3,9 @@ import {useAppStateFromContext} from "../SandboxContext";
 import {useDebounce} from "../utils/hooks";
 import {searchVideos} from "../api";
 import Tree from "../components/Tree";
-import Focusable from "../components/Focusable";
 import {TreeDefinition} from "../Sandbox/types";
 
-export default ({onTreeKeyPress}: any) => {
+export default () => {
   const [app, dispatch] = useAppStateFromContext();
   const [text, setText] = useState("");
   const value = useDebounce(text, 500);
@@ -34,15 +33,13 @@ export default ({onTreeKeyPress}: any) => {
         value={text}
         onChange={e => setText(e.target.value)}
         type="text"
-        style={{width: 300}}
+        style={{width: '100%', boxSizing: 'border-box'}}
       />
       {
         isSearching ? "Searching..." : " "
       }
 
-      <Focusable tabIndex={2} onKeyPress={onTreeKeyPress}>
-        <Tree app={app}/>
-      </Focusable>
+      <Tree app={app}/>
     </div>
   );
 };

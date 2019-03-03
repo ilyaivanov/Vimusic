@@ -14,3 +14,6 @@ export const searchVideos = (term: string): Promise<Video[]> =>
           return {text: s.snippet.title, id: s.id.videoId};
         })
     );
+
+
+//https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=AIzaSyBsCL-zrXWd9S2FKRSDVfz7dOo783LQkLk&relatedToVideoId=WYp9Eo9T3BA&

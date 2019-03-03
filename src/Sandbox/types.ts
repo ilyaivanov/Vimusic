@@ -16,6 +16,7 @@ export interface TreeDefinition {
   text: string;
   youtubeId?: string;
   isChildrenHidden?: boolean;
+  isLoading?: boolean;
   isEditing?: boolean;
 }
 
@@ -58,7 +59,14 @@ export interface SelectAction {
 }
 
 
-export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction;
+export interface SetChildrenAction {
+  type: "SET_CHILDREN";
+  parentId: string;
+  children: TreeDefinition[];
+}
+
+
+export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction | SetChildrenAction;
 
 
 export type AppStateActionCreator = (state: AppState, dispatch: Dispatch) => void;

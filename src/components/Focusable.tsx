@@ -19,6 +19,8 @@ export default ({onKeyPress, tabIndex, children}: Props) => {
 
   return (
     <div
+      className="area"
+      style={{flex: 1}}
       tabIndex={tabIndex}
       onFocus={() => setFocus(true)}
       onBlur={() => setFocus(false)}

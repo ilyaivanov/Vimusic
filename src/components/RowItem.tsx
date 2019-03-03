@@ -52,7 +52,8 @@ export const RowItem = ({level, nodeId}: RowItemProps) => {
       ) : (
         node.text
       )}
-      {node.isChildrenHidden ? "..." : ""}
+      {node.isLoading && <i> (Loading...)</i>}
+      {node.isChildrenHidden && "..."}
     </div>
   );
 };

@@ -2,7 +2,8 @@ import {Action, AppState, TreeNode} from "./types";
 import {useReducer} from "react";
 import {getPrevious, insertBefore, isFirst, isLast, nextItem, previousItem, removeItem} from "../utils/array";
 import {
-  appendNodes, createEmptyTree,
+  appendNodes,
+  createEmptyTree,
   getChildren,
   getContext,
   getDeepestChild,
@@ -166,6 +167,24 @@ export const reducer = (state: AppState, action: Action): AppState => {
       ...state,
       selectedNode: action.nodeId
     }
+  }
+  if (action.type === 'SET_CHILDREN') {
+    const nodeId = action.parentId;
+    const newState: AppState = {
+      ...state,
+      nodes: {
+        ...state.nodes,
+        [nodeId]: {
+          ...state.nodes[nodeId],
+          children: action.children.map(c => c.id)
+        }
+      },
+    };
+    action.children.forEach(child => {
+      newState.nodes[child.id] = child;
+    });
+
+    return newState;
   }
   return state;
 };

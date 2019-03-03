@@ -45,7 +45,7 @@ export const simulateSequenceOfEvents = (state: AppState, codes: string[]) =>
 export const createTestInitialTree = (): TreeNode => ({
   ...createNodeEntry("1", {children: ["1.1"]}),
   ...createNodeEntry("1.1", {children: ["1.1.1", "1.1.2", '1.1.3']}),
-  ...createNodeEntry("1.1.1"),
+  ...createNodeEntry("1.1.1", {youtubeId: 'youtubeIdUnitTests'}),
   ...createNodeEntry("1.1.2"),
   ...createNodeEntry("1.1.3"),
   ...createNodeEntry("2"),

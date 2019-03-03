@@ -1,5 +1,9 @@
 import {simulateKeyboardPress, simulateKeyboardPressForState} from "./testUtils";
 import {createEmptyTree} from "../treeUtils";
+import {AppState} from "../types";
+import {reducer} from "../state";
+import {dummyVideos} from "../../api/faked/youtube";
+import {setVideosAsChildren} from "./traversal";
 
 const verifyMoveDown = (initialPosition: string, expectedPosition: string) => {
   const state = simulateKeyboardPress(initialPosition, 'ArrowDown');
@@ -10,6 +14,34 @@ const verifyMoveUp = (initialPosition: string, expectedPosition: string) => {
   const state = simulateKeyboardPress(initialPosition, 'ArrowUp');
   expect(state.selectedNode).toEqual(expectedPosition);
 };
+
+describe('having a 1.1.1 selected when moving right', () => {
+  let state: AppState;
+  beforeEach(() => {
+    state = simulateKeyboardPress('1.1.1', 'ArrowRight');
+  });
+
+  it('1.1.1 should be marked as loading', () => {
+    expect(state.nodes[state.selectedNode].isLoading).toEqual(true);
+  });
+
+
+  describe('when children have been loaded', () => {
+    let withChildren: AppState;
+    beforeEach(() => {
+      withChildren = reducer(state, setVideosAsChildren(state.selectedNode, dummyVideos));
+    });
+    it('parent should have corresponding children', () => {
+      expect(withChildren.nodes['1.1.1'].children).toHaveLength(3);
+    });
+
+    it('children should have their own definitions', () => {
+      const parent = withChildren.nodes['1.1.1'] as any;
+      const parentId = parent.children[0];
+      expect(withChildren.nodes[parentId].text).toBeDefined();
+    });
+  });
+});
 
 
 describe("when moving up", () => {

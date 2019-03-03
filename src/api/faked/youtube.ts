@@ -1,11 +1,13 @@
-import { Video } from "../index";
+import {Video} from "../index";
 
 export const searchVideos = (term: string): Promise<Video[]> =>
   new Promise(resolve => {
-    const videos: Video[] = [
-      { id: 'SwsbOBlC-G0', text: "Working video" + term },
-      { id: "Result 2" + term, text: "Result 2" + term },
-      { id: "Result 3" + term, text: "Result 3" + term }
-    ];
-    setTimeout(() => resolve(videos), 200);
+    setTimeout(() => resolve(dummyVideos), 200);
   });
+
+
+export const dummyVideos: Video[] = [
+  {id: 'iIO-xrZ6IE0', text: "Sample 1 Deep house"},
+  {id: "dUh1eGf57DY", text: "Sample 2 Brian Regan for term "},
+  {id: "00CbHeQ1k5I", text: "Sample 3 Carbon Based Lifeforms - Hydroponic Garden"}
+];
