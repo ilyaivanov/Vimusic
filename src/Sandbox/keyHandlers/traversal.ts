@@ -7,10 +7,11 @@ import {
   getParentKey,
   hasChildren,
   isEditingCurrentNode,
-  isNodeHidden
+  isNodeHidden,
+  isRoot
 } from "../treeUtils";
 import {isFirst, isLast, nextItem, previousItem} from "../../utils/array";
-import {endLoading, startLoading, stopEditNode} from "./editing";
+import {endLoading, hideChildren, selectNode, showChildren, startLoading, stopEditNode} from "./actions";
 import {fetchSimilarVideos, Video} from "../../api";
 
 type Codes = {
@@ -21,6 +22,7 @@ const codes: Codes = {
   'ArrowDown': moveNodeDown,
   'ArrowUp': moveNodeUp,
   'ArrowRight': moveNodeRight,
+  'ArrowLeft': moveNodeLeft,
 };
 
 export const handleTraversal = (event: KeyboardEvent, state: AppState, dispatch: Dispatch) => {
@@ -34,7 +36,7 @@ export const handleTraversal = (event: KeyboardEvent, state: AppState, dispatch:
     //note that stopEditNode is using selected node
     //Currently you are going to stop editing even if you click down with only one item in a list
     if (isEditingCurrentNode(state)) {
-      stopEditNode(state, dispatch);
+      dispatch(stopEditNode(state.selectedNode));
     }
 
     handler(state, dispatch);
@@ -49,14 +51,14 @@ function moveNodeDown(state: AppState, dispatch: Dispatch) {
     hasChildren(state, state.selectedNode) &&
     !isNodeHidden(state, state.selectedNode)
   ) {
-    dispatch({type: 'SELECT_NODE', nodeId: getChildren(state, state.selectedNode)[0]});
+    dispatch(selectNode(getChildren(state, state.selectedNode)[0]));
   } else {
     const context = getContext(state, state.selectedNode);
     if (isLast(context, state.selectedNode)) {
       const parentContext = getParentContext(state, state.selectedNode);
-      dispatch({type: 'SELECT_NODE', nodeId: nextItem(parentContext.context, parentContext.parent)});
+      dispatch(selectNode(nextItem(parentContext.context, parentContext.parent)));
     } else {
-      dispatch({type: 'SELECT_NODE', nodeId: nextItem(context, state.selectedNode)});
+      dispatch(selectNode(nextItem(context, state.selectedNode)));
     }
   }
 }
@@ -67,10 +69,10 @@ function moveNodeUp(state: AppState, dispatch: Dispatch) {
 
   const context = getContext(state, state.selectedNode);
   if (isFirst(context, state.selectedNode)) {
-    dispatch({type: 'SELECT_NODE', nodeId: getParentKey(state, state.selectedNode)});
+    dispatch(selectNode(getParentKey(state, state.selectedNode)));
   } else {
     const previousNode = previousItem(context, state.selectedNode);
-    dispatch({type: 'SELECT_NODE', nodeId: getDeepestChild(state, previousNode)});
+    dispatch(selectNode(getDeepestChild(state, previousNode)));
   }
 }
 
@@ -84,6 +86,22 @@ function moveNodeRight(state: AppState, dispatch: Dispatch) {
         dispatch(endLoading(state.selectedNode));
         dispatch(setVideosAsChildren(state.selectedNode, videos))
       });
+  } else if (isNodeHidden(state, state.selectedNode)) {
+    dispatch(showChildren(state.selectedNode));
+  } else {
+    return dispatch(selectNode(getChildren(state, state.selectedNode)[0]));
+  }
+}
+
+
+function moveNodeLeft(state: AppState, dispatch: Dispatch) {
+  if (
+    !isNodeHidden(state, state.selectedNode) &&
+    hasChildren(state, state.selectedNode)
+  ) {
+    dispatch(hideChildren(state.selectedNode));
+  } else if (!isRoot(state, state.selectedNode)) {
+    dispatch(selectNode(getParentKey(state, state.selectedNode)))
   }
 }
 
@@ -97,3 +115,4 @@ export const setVideosAsChildren = (nodeId: string, videos: Video[]): Action => 
     children
   }
 };
+

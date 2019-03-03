@@ -1,6 +1,6 @@
 import {AppState, Dispatch} from "../types";
 import {handleTraversal} from "./traversal";
-import {createNode, deleteNode, startEditNode, stopEditNode} from "./editing";
+import {createNode, deleteNode, startEditNode, stopEditNode} from "./actions";
 import {isEditingCurrentNode} from "../treeUtils";
 
 export const onKeyPress = (event: KeyboardEvent, state: AppState, dispatch: Dispatch) => {
@@ -8,13 +8,13 @@ export const onKeyPress = (event: KeyboardEvent, state: AppState, dispatch: Disp
 
   if (event.code === 'Enter') {
     if (state.rootNodes.length > 0 && isEditingCurrentNode(state)) {
-      stopEditNode(state, dispatch);
+      dispatch(stopEditNode(state.selectedNode));
     } else {
       createNode(state, dispatch);
     }
   }
   if (event.code === 'F2') {
-    startEditNode(state, dispatch);
+    dispatch(startEditNode(state.selectedNode));
   }
   if (event.code === 'Backspace') {
     deleteNode(state, dispatch);

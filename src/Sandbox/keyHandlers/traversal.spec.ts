@@ -1,4 +1,8 @@
-import {simulateKeyboardPress, simulateKeyboardPressForState} from "./testUtils";
+import {
+  simulateKeyboardPress,
+  simulateKeyboardPressForState,
+  simulateSequenceOfEventsOnSelectedNode
+} from "./testUtils";
 import {createEmptyTree} from "../treeUtils";
 import {AppState} from "../types";
 import {reducer} from "../state";
@@ -102,3 +106,25 @@ describe('having an empty tree', () => {
     expect(state).toEqual(createEmptyTree());
   });
 });
+
+it('when moving right on a 1.1 node 1.1.1 should be selected', () => {
+  const state = simulateKeyboardPress('1.1', 'ArrowRight');
+  expect(state.selectedNode).toEqual('1.1.1');
+});
+
+it('when moving left on a 1.1 node 1.1 should be hidden', () => {
+  const state = simulateKeyboardPress('1.1', 'ArrowLeft');
+  expect(state.nodes[state.selectedNode].isChildrenHidden).toEqual(true);
+});
+
+it('when moving right on nodes with hidden subchilds they should be shown', () => {
+  const state = simulateSequenceOfEventsOnSelectedNode('1.1', ['ArrowLeft', 'ArrowRight']);
+  expect(state.nodes[state.selectedNode].isChildrenHidden).toEqual(false);
+});
+
+
+it('when moving left two times on a 1.1 node 1 should be selected', () => {
+  const state = simulateSequenceOfEventsOnSelectedNode('1.1', ['ArrowLeft', 'ArrowLeft']);
+  expect(state.selectedNode).toEqual('1');
+});
+

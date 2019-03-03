@@ -32,6 +32,9 @@ export const simulateSequenceOfEvents = (state: AppState, codes: string[]) =>
   codes.reduce((currentState, code) => simulateKeyboardPressForState(currentState, code), state);
 
 
+export const simulateSequenceOfEventsOnSelectedNode = (initialPosition: string, codes: string[]) =>
+  simulateSequenceOfEvents(createState(initialPosition), codes);
+
 //1
 //  1.1
 //    1.1.1
