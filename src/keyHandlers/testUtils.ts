@@ -1,5 +1,5 @@
 import {Action, AppState, TreeDefinition, TreeNode} from "../types";
-import {reducer} from "../state";
+import {reducer} from "../state/reducer";
 import {onKeyPress} from "./index";
 
 const createState = (selected: string): AppState => ({

@@ -3,10 +3,10 @@ import {
   simulateKeyboardPressForState,
   simulateSequenceOfEventsOnSelectedNode
 } from "./testUtils";
-import {createEmptyTree} from "../treeUtils";
+import {createEmptyTree} from "../state/treeUtils";
 import {AppState} from "../types";
-import {reducer} from "../state";
-import {dummyVideos} from "../../api/faked/youtube";
+import {reducer} from "../state/reducer";
+import {dummyVideos} from "../api/faked/youtube";
 import {setVideosAsChildren} from "./traversal";
 
 const verifyMoveDown = (initialPosition: string, expectedPosition: string) => {

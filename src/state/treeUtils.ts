@@ -1,4 +1,4 @@
-import {AppState, TreeDefinition, TreeNode} from "./types";
+import {AppState, TreeDefinition, TreeNode} from "../types";
 import {contains, last} from "../utils/array";
 
 export const getContext = (state: AppState, nodeId: string): string[] => {

@@ -1,7 +1,7 @@
 import {AppState, Dispatch} from "../types";
 import {handleTraversal} from "./traversal";
 import {createNode, deleteNode, startEditNode, stopEditNode} from "./actions";
-import {isEditingCurrentNode} from "../treeUtils";
+import {isEditingCurrentNode} from "../state/treeUtils";
 
 export const onKeyPress = (event: KeyboardEvent, state: AppState, dispatch: Dispatch) => {
   handleTraversal(event, state, dispatch);

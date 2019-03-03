@@ -1,4 +1,4 @@
-import {AppState} from "../Sandbox/types";
+import {AppState} from "../types";
 import {List} from "./List";
 import React from "react";
 

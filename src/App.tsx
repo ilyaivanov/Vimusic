@@ -1,12 +1,12 @@
 import React from "react";
 import SearchInput from "./Search/SearchInput";
 import {SandboxContext} from "./SandboxContext";
-import {useAppState} from "./Sandbox/state";
-import {onKeyPress} from "./Sandbox/keyHandlers";
+import {useAppState} from "./state/reducer";
+import {onKeyPress} from "./keyHandlers";
 import YoutubePlayer from "./components/Player";
 import {usePlayer} from "./state/player";
-import {AppState} from "./Sandbox/types";
-import {isEditingCurrentNode} from "./Sandbox/treeUtils";
+import {AppState} from "./types";
+import {isEditingCurrentNode} from "./state/treeUtils";
 import Focusable from "./components/Focusable";
 import Tree from "./components/Tree";
 

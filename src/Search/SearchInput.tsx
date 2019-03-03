@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useDebounce} from "../utils/hooks";
 import {searchVideos} from "../api";
-import {Dispatch, TreeDefinition} from "../Sandbox/types";
+import {TreeDefinition} from "../types";
 
 interface Props {
   onSearched: (nodes: TreeDefinition[]) => void;

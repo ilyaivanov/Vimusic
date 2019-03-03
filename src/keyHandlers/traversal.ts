@@ -10,10 +10,10 @@ import {
   isNodeHidden,
   isNodeLoading,
   isRoot
-} from "../treeUtils";
-import {isFirst, isLast, nextItem, previousItem} from "../../utils/array";
+} from "../state/treeUtils";
+import {isFirst, isLast, nextItem, previousItem} from "../utils/array";
 import {endLoading, hideChildren, selectNode, showChildren, startLoading, stopEditNode} from "./actions";
-import {fetchSimilarVideos, Video} from "../../api";
+import {fetchSimilarVideos, Video} from "../api";
 
 type Codes = {
   [id: string]: AppStateActionCreator | undefined;

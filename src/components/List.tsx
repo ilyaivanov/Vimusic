@@ -1,5 +1,5 @@
 import React, {Fragment} from "react";
-import {TreeNode} from "../Sandbox/types";
+import {TreeNode} from "../types";
 import {RowItem} from "./RowItem";
 
 interface Props {

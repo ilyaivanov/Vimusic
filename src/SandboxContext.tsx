@@ -1,5 +1,5 @@
 import React, {useContext} from "react";
-import {AppState, Dispatch} from "./Sandbox/types";
+import {AppState, Dispatch} from "./types";
 
 // @ts-ignore
 const CountContext = React.createContext();
