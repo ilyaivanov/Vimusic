@@ -29,6 +29,14 @@ export function insertBefore<T>(array: T[], insertBofore: T, valueToInsert: T): 
   return copy;
 }
 
+export function insertAfter<T>(array: T[], insertAfter: T, valueToInsert: T) {
+  const index = array.indexOf(insertAfter);
+  const copy = [...array];
+  copy.splice(index + 1, 0, valueToInsert);
+  return copy;
+}
+
+
 export function getPrevious<T>(array: T[], item: T) {
   const index = array.indexOf(item);
   return array[index - 1];
@@ -67,3 +75,4 @@ export function swapRight<T>(array: T[], item: T) {
     ...array.slice(index + 2),
   ];
 }
+

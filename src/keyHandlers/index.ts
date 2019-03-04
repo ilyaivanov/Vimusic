@@ -2,14 +2,17 @@ import {AppState, Dispatch} from "../types";
 import {handleTraversal} from "./traversal";
 import {createNode, deleteNode, startEditNode, stopEditNode} from "./actions";
 import {isEditingCurrentNode} from "../state/treeUtils";
-import {swapSelectedNodeDown, swapSelectedNodeUp} from "./nodeSwap";
+import {swapSelectedNodeDown, swapSelectedNodeLeft, swapSelectedNodeRight, swapSelectedNodeUp} from "./nodeSwap";
 
 export const onKeyPress = (event: KeyboardEvent, state: AppState, dispatch: Dispatch) => {
-
-  if (event.shiftKey && event.metaKey && event.code === 'ArrowDown') {
+  if (isSwapping(event, 'ArrowDown')) {
     swapSelectedNodeDown(state, dispatch);
-  } else if (event.shiftKey && event.metaKey && event.code === 'ArrowUp') {
+  } else if (isSwapping(event, 'ArrowUp')) {
     swapSelectedNodeUp(state, dispatch);
+  } else if (isSwapping(event, 'ArrowLeft')) {
+    swapSelectedNodeLeft(state, dispatch);
+  } else if (isSwapping(event, 'ArrowRight')) {
+    swapSelectedNodeRight(state, dispatch);
   } else {
     handleTraversal(event, state, dispatch);
   }
@@ -30,5 +33,8 @@ export const onKeyPress = (event: KeyboardEvent, state: AppState, dispatch: Disp
   }
 };
 
+
+const isSwapping = (event: KeyboardEvent, key: string) =>
+  event.shiftKey && event.metaKey && event.code === key;
 
 
