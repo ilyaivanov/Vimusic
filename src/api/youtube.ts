@@ -1,5 +1,6 @@
 import {Video} from "./index";
-import {RootObject} from "./youtube.generated";
+import {SearchResponse} from "./generated/searchResponse";
+import {SimilarResponse} from "./generated/similarResponse";
 
 export const searchVideos = (term: string): Promise<Video[]> =>
   fetch(
@@ -7,7 +8,7 @@ export const searchVideos = (term: string): Promise<Video[]> =>
     term
   )
     .then(response => response.json())
-    .then((data: RootObject) =>
+    .then((data: SearchResponse) =>
       data.items
         .filter(v => v.id.videoId)
         .map(s => {
@@ -15,5 +16,16 @@ export const searchVideos = (term: string): Promise<Video[]> =>
         })
     );
 
-
-//https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=AIzaSyBsCL-zrXWd9S2FKRSDVfz7dOo783LQkLk&relatedToVideoId=WYp9Eo9T3BA&
+export const searchSimilar = (videoId: string): Promise<Video[]> =>
+  fetch(
+    "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key=AIzaSyBsCL-zrXWd9S2FKRSDVfz7dOo783LQkLk&relatedToVideoId=" +
+    videoId
+  )
+    .then(response => response.json())
+    .then((data: SimilarResponse) =>
+      data.items
+        .filter(v => v.id.videoId)
+        .map(s => {
+          return {text: s.snippet.title, id: s.id.videoId};
+        })
+    );

@@ -1,5 +1,6 @@
-//GENERATED CODE FROM SAMPLE RESPONSE
-export interface RootObject {
+//https://transform.now.sh/json-to-ts-interface/
+// GENERATED CODE FROM SAMPLE RESPONSE
+export interface SearchResponse {
   kind: string;
   etag: string;
   nextPageToken: string;
