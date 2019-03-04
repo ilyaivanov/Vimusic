@@ -22,16 +22,9 @@ describe('creating a new node when 1 is selected', () => {
     expect(state.nodes[secondNodeId].text).toEqual('1');
   });
 
-  describe('then when moving down', () => {
-    it('current node should be stopped editing', () => {
-      const s = simulateKeyboardPressForState(state, 'ArrowDown');
-      expect(s.nodes[s.rootNodes[0]].isEditing).toEqual(false);
-    });
-
-    it('and next node should be selected', () => {
-      const s = simulateKeyboardPressForState(state, 'ArrowDown');
-      expect(s.selectedNode).toEqual('1');
-    });
+  it('then when moving down nothing should happen', () => {
+    const s = simulateKeyboardPressForState(state, 'ArrowDown');
+    expect(s).toEqual(state);
   });
 });
 

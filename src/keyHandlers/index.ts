@@ -5,6 +5,20 @@ import {isEditingCurrentNode} from "../state/treeUtils";
 import {swapSelectedNodeDown, swapSelectedNodeLeft, swapSelectedNodeRight, swapSelectedNodeUp} from "./nodeSwap";
 
 export const onKeyPress = (event: KeyboardEvent, state: AppState, dispatch: Dispatch) => {
+  if (event.code === 'Enter') {
+    if (state.rootNodes.length > 0 && isEditingCurrentNode(state)) {
+      dispatch(stopEditNode(state.selectedNode));
+    } else {
+      createNode(state, dispatch);
+    }
+  }
+
+  //do not handle any more nodes
+  if (state.rootNodes.length > 0 && isEditingCurrentNode(state)) {
+    return;
+  }
+
+
   if (isSwapping(event, 'ArrowDown')) {
     swapSelectedNodeDown(state, dispatch);
   } else if (isSwapping(event, 'ArrowUp')) {
@@ -15,14 +29,6 @@ export const onKeyPress = (event: KeyboardEvent, state: AppState, dispatch: Disp
     swapSelectedNodeRight(state, dispatch);
   } else {
     handleTraversal(event, state, dispatch);
-  }
-
-  if (event.code === 'Enter') {
-    if (state.rootNodes.length > 0 && isEditingCurrentNode(state)) {
-      dispatch(stopEditNode(state.selectedNode));
-    } else {
-      createNode(state, dispatch);
-    }
   }
 
   if (event.code === 'F2') {

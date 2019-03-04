@@ -34,6 +34,7 @@ export const RowItem = ({level, nodeId}: RowItemProps) => {
           ref={txt1}
           type="text"
           value={node.text}
+          tabIndex={4}
           onBlur={() =>
             dispatch({
               type: "EditNode",
