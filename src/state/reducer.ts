@@ -4,6 +4,11 @@ import {getPrevious, insertBefore, isFirst, removeItem} from "../utils/array";
 import {createEmptyTree, getContext, getParentKey, isRoot, updateNode} from "./treeUtils";
 
 export const reducer = (state: AppState, action: Action): AppState => {
+
+  if (action.type === 'RESTORE') {
+    return action.savedState;
+  }
+
   if (action.type === "SET_NODES") {
     const {nodes} = action;
     const tree: TreeNode = {};

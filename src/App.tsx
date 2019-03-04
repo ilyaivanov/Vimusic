@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import SearchInput from "./Search/SearchInput";
 import {SandboxContext} from "./SandboxContext";
 import {useAppState} from "./state/reducer";
@@ -47,6 +47,20 @@ const App = () => {
     handlePlayerKeys(event, favoritesNodes);
     onKeyPress(event, favoritesNodes, favoritesDispatch);
   };
+
+  useEffect(() => {
+    const saved = localStorage.getItem('favorites');
+    if (saved) {
+      favoritesDispatch({
+        type: 'RESTORE',
+        savedState: JSON.parse(saved)
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favoritesNodes));
+  }, [favoritesNodes]);
 
   return (
     <div>

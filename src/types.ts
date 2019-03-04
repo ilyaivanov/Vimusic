@@ -71,7 +71,12 @@ export interface SetRootsAction {
 }
 
 
-export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction | SetChildrenAction | SetRootsAction;
+export interface RestoreAction {
+  type: "RESTORE";
+  savedState: AppState;
+}
+
+export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction | SetChildrenAction | SetRootsAction | RestoreAction;
 
 
 export type AppStateActionCreator = (state: AppState, dispatch: Dispatch) => void;
