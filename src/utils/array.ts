@@ -39,3 +39,31 @@ export function removeItem<T>(array: T[] | undefined, item: T) {
     return [];
   array.splice(array.indexOf(item), 1);
 }
+
+export function swapLeft<T>(array: T[], item: T) {
+  const index = array.indexOf(item);
+
+  if (index == 0)
+    return array;
+
+  return [
+    ...array.slice(0, index - 1),
+    array[index],
+    array[index - 1],
+    ...array.slice(index + 1),
+  ];
+}
+
+export function swapRight<T>(array: T[], item: T) {
+  const index = array.indexOf(item);
+
+  if (index == array.length - 1)
+    return array;
+
+  return [
+    ...array.slice(0, index),
+    array[index + 1],
+    array[index],
+    ...array.slice(index + 2),
+  ];
+}

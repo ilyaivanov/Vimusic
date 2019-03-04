@@ -110,6 +110,13 @@ export const reducer = (state: AppState, action: Action): AppState => {
 
     return newState;
   }
+
+  if (action.type === 'SET_ROOTS') {
+    return {
+      ...state,
+      rootNodes: action.roots
+    }
+  }
   return state;
 };
 

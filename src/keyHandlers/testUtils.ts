@@ -1,8 +1,8 @@
-import {Action, AppState, TreeDefinition, TreeNode} from "../types";
+import {Action, AppState, AppStateActionCreator, TreeDefinition, TreeNode} from "../types";
 import {reducer} from "../state/reducer";
 import {onKeyPress} from "./index";
 
-const createState = (selected: string): AppState => ({
+export const createState = (selected: string): AppState => ({
   selectedNode: selected,
   nodes: createTestInitialTree(),
   rootNodes: ["1", "2", "3"]
@@ -31,9 +31,18 @@ export const simulateKeyboardPressForState = (state: AppState, code: string) => 
 export const simulateSequenceOfEvents = (state: AppState, codes: string[]) =>
   codes.reduce((currentState, code) => simulateKeyboardPressForState(currentState, code), state);
 
-
 export const simulateSequenceOfEventsOnSelectedNode = (initialPosition: string, codes: string[]) =>
   simulateSequenceOfEvents(createState(initialPosition), codes);
+
+export const simulateActionCreator = (state: AppState, actionCreator: AppStateActionCreator) => {
+  let result = state;
+  const dummyDispatch = (action: Action) => {
+    result = reducer(result, action);
+  };
+  actionCreator(result, dummyDispatch);
+  return result;
+};
+
 
 //1
 //  1.1

@@ -65,8 +65,13 @@ export interface SetChildrenAction {
   children: TreeDefinition[];
 }
 
+export interface SetRootsAction {
+  type: "SET_ROOTS";
+  roots: string[];
+}
 
-export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction | SetChildrenAction;
+
+export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction | SetChildrenAction | SetRootsAction;
 
 
 export type AppStateActionCreator = (state: AppState, dispatch: Dispatch) => void;

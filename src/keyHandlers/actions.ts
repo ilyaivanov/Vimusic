@@ -33,6 +33,14 @@ export const startLoading = (nodeId: string): Action =>
 export const endLoading = (nodeId: string): Action =>
   editAction(nodeId, {isLoading: false});
 
+export const setChildren = (nodeId: string, children: string[]): Action =>
+  editAction(nodeId, {children});
+
+export const setRoots = (roots: string[]): Action => ({
+  type:'SET_ROOTS',
+  roots
+});
+
 const editAction = (nodeId: string, props: Partial<TreeDefinition>): Action => ({
   type: "EditNode",
   nodeId,
