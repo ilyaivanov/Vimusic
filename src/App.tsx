@@ -1,10 +1,9 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import SearchInput from "./Search/SearchInput";
 import {SandboxContext} from "./SandboxContext";
 import {useAppState} from "./state/reducer";
 import {onKeyPress} from "./keyHandlers";
-import YoutubePlayer from "./components/Player";
-import {usePlayer} from "./state/player";
+import Player from "./player";
 import {AppState} from "./types";
 import {isEditingCurrentNode} from "./state/treeUtils";
 import Focusable from "./components/Focusable";
@@ -14,7 +13,7 @@ const App = () => {
   const [searchNodes, searchDispatch] = useAppState();
   const [favoritesNodes, favoritesDispatch] = useAppState();
 
-  const [playerState, dispatchPlayAction] = usePlayer();
+  const [video, setVideo] = useState();
 
   const handlePlayerKeys = (event: KeyboardEvent, context: AppState) => {
     if (event.code === 'KeyP' && !isEditingCurrentNode(context)) {
@@ -22,7 +21,7 @@ const App = () => {
       if (!node.youtubeId) {
         console.warn(node, "Expected to have 'youtubeId' property, but it didn't");
       } else {
-        dispatchPlayAction({type: 'PLAY', youtubeVideoId: node.youtubeId})
+        setVideo(node.youtubeId);
       }
     }
   };
@@ -80,7 +79,7 @@ const App = () => {
           </SandboxContext>
         </Focusable>
       </div>
-      <YoutubePlayer visible id={playerState.youtubeVideoId}/>
+      <Player videoId={video} />
     </div>
   );
 };
