@@ -1,6 +1,6 @@
-import {AppState} from "../types";
+import {AppState} from "../../types";
 import {simulateKeyboardPress, simulateKeyboardPressForState, simulateSequenceOfEvents} from "./testUtils";
-import {createEmptyTree} from "../state/treeUtils";
+import {createEmptyTree} from "../treeUtils";
 
 describe('creating a new node when 1 is selected', () => {
   let state: AppState;

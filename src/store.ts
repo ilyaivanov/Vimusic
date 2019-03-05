@@ -1,17 +1,25 @@
-import { combineReducers, createStore } from "redux";
+import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import player from "./player/reducer";
+import treeReducer from "./tree/reducer";
+import userSettings from "./userSettings/reducer";
+import thunk from "redux-thunk";
 
 declare global {
   interface Window {
-    __REDUX_DEVTOOLS_EXTENSION__: any;
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: typeof compose;
   }
 }
 
 const reducer = combineReducers({
-  player
+  player,
+  userSettings,
+  favorites: treeReducer,
+  search: treeReducer
 });
 
-export const createPlayerStore = () => createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+export const createPlayerStore = () => createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 
 export default createPlayerStore();
 

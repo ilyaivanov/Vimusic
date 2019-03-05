@@ -5,7 +5,16 @@ export type Dispatch = (action: Action) => void;
 
 export interface State {
   player: PlayerState;
+  favorites: AppState;
+  search: AppState;
+  userSettings: UserSettings;
 }
+
+export interface UserSettings {
+  selection: SelectionScope;
+}
+
+export type SelectionScope = "favorites" | "search" | "searchInput";
 
 export type VimusicStore = Store<State, PlayerAction>;
 
@@ -85,7 +94,16 @@ export interface RestoreAction {
   savedState: AppState;
 }
 
-export type Action = PlainAction | SetAction | EditAction | CreateAction | DeleteAction | SelectAction | SetChildrenAction | SetRootsAction | RestoreAction;
+export type Action =
+  PlainAction
+  | SetAction
+  | EditAction
+  | CreateAction
+  | DeleteAction
+  | SelectAction
+  | SetChildrenAction
+  | SetRootsAction
+  | RestoreAction;
 
 
 export type AppStateActionCreator = (state: AppState, dispatch: Dispatch) => void;

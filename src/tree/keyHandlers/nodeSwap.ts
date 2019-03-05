@@ -1,6 +1,6 @@
-import {AppState, Dispatch} from "../types";
-import {getParentKey, isRoot} from "../state/treeUtils";
-import {getPrevious, insertAfter, isFirst, removeItem, swapLeft, swapRight} from "../utils/array";
+import {AppState, Dispatch} from "../../types";
+import {getParentKey, isRoot} from "../treeUtils";
+import {getPrevious, insertAfter, isFirst, removeItem, swapLeft, swapRight} from "../../utils/array";
 import {setChildren, setRoots} from "./actions";
 
 export const swapSelectedNodeDown = (state: AppState, dispatch: Dispatch) => {

@@ -13,7 +13,7 @@ export const List = ({nodes, selectedId, nodesToShow, level = 0}: Props) => (
   <Fragment>
     {nodesToShow.map(n => (
       <Fragment key={n}>
-        <RowItem nodeId={n} level={level}/>
+        <RowItem nodeId={n} level={level} />
         {nodes[n].children && !nodes[n].isChildrenHidden && (
           <List
             nodes={nodes}

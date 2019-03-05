@@ -11,6 +11,17 @@ interface Props {
   togglePlay: typeof togglePlay;
 }
 
+//  const handlePlayerKeys = (event: KeyboardEvent, context: AppState) => {
+//     if (event.code === "KeyP" && !isEditingCurrentNode(context)) {
+//       const node = context.nodes[context.selectedNode];
+//       if (!node.youtubeId) {
+//         console.warn(node, "Expected to have 'youtubeId' property, but it didn't");
+//       } else {
+//         playVideo(node.youtubeId);
+//       }
+//     }
+//   };
+
 const MyButton = ({ youtubeId, isPlaying, togglePlay }: Props) => {
   useKeyboard((event) => {
     if (event.code === "Space" && youtubeId) {

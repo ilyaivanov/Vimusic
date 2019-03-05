@@ -1,6 +1,6 @@
-import {Action, AppState, AppStateActionCreator, TreeDefinition, TreeNode} from "../types";
-import {reducer} from "../state/reducer";
-import {onKeyPress} from "./index";
+import { Action, AppState, AppStateActionCreator, State, TreeDefinition, TreeNode } from "../../types";
+import { reducer } from "../reducer";
+import { onKeyPress } from "./index";
 
 export const createState = (selected: string): AppState => ({
   selectedNode: selected,
@@ -14,7 +14,17 @@ export const simulateKeyboardPress = (initialPosition: string, code: string) => 
   const dummyDispatch = (action: Action) => {
     state = reducer(state, action);
   };
-  onKeyPress({code} as KeyboardEvent, state, dummyDispatch);
+  const overallState: State = {
+    favorites: state,
+    search: state,
+    userSettings: {
+      selection: "favorites"
+    },
+    player: {
+      isPlaying: false
+    }
+  };
+  onKeyPress({ code } as KeyboardEvent, () => overallState, dummyDispatch);
   return state;
 };
 
@@ -24,7 +34,17 @@ export const simulateKeyboardPressForState = (state: AppState, code: string) => 
   const dummyDispatch = (action: Action) => {
     result = reducer(result, action);
   };
-  onKeyPress({code} as KeyboardEvent, result, dummyDispatch);
+  const overallState: State = {
+    favorites: state,
+    search: state,
+    userSettings: {
+      selection: "favorites"
+    },
+    player: {
+      isPlaying: false
+    }
+  };
+  onKeyPress({ code } as KeyboardEvent, () => overallState, dummyDispatch);
   return result;
 };
 
@@ -55,13 +75,13 @@ export const simulateActionCreator = (state: AppState, actionCreator: AppStateAc
 //  3.2
 
 export const createTestInitialTree = (): TreeNode => ({
-  ...createNodeEntry("1", {children: ["1.1"]}),
-  ...createNodeEntry("1.1", {children: ["1.1.1", "1.1.2", '1.1.3']}),
-  ...createNodeEntry("1.1.1", {youtubeId: 'youtubeIdUnitTests'}),
+  ...createNodeEntry("1", { children: ["1.1"] }),
+  ...createNodeEntry("1.1", { children: ["1.1.1", "1.1.2", "1.1.3"] }),
+  ...createNodeEntry("1.1.1", { youtubeId: "youtubeIdUnitTests" }),
   ...createNodeEntry("1.1.2"),
   ...createNodeEntry("1.1.3"),
   ...createNodeEntry("2"),
-  ...createNodeEntry("3", {children: ["3.1", "3.2"]}),
+  ...createNodeEntry("3", { children: ["3.1", "3.2"] }),
   ...createNodeEntry("3.1"),
   ...createNodeEntry("3.2")
 });

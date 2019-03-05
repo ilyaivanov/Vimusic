@@ -1,25 +1,29 @@
-import React, {useEffect, useRef} from "react";
-import {useAppStateFromContext} from "../SandboxContext";
+import React, { useRef } from "react";
+import { State } from "../types";
+import { connect } from "react-redux";
 
-interface RowItemProps {
+interface OuterProps{
   level?: number;
   nodeId: string;
 }
 
-export const RowItem = ({level, nodeId}: RowItemProps) => {
-  const [app, dispatch] = useAppStateFromContext();
+interface RowItemProps extends OuterProps{
+  text: string;
+  isSelected: boolean;
+  isEditing: boolean;
+  isChildrenHidden: boolean;
+  isLoading: boolean;
+}
 
-  const node = app.nodes[nodeId];
-  const isSelected = app.selectedNode === nodeId;
-
+const RowItemDef = ({ level, text, isSelected, isEditing, isChildrenHidden, isLoading }: RowItemProps) => {
   const txt1 = useRef(null);
 
-  useEffect(() => {
-    const {current} = txt1 as any;
-    if (current && node.isEditing) {
-      current.focus();
-    }
-  }, [node.isEditing]);
+  // useEffect(() => {
+  //   const {current} = txt1 as any;
+  //   if (current && node.isEditing) {
+  //     current.focus();
+  //   }
+  // }, [node.isEditing]);
 
   return (
     <div
@@ -29,32 +33,42 @@ export const RowItem = ({level, nodeId}: RowItemProps) => {
         backgroundColor: isSelected ? "#c3c3c3" : undefined
       }}
     >
-      {node.isEditing ? (
+      {isEditing ? (
         <input
           ref={txt1}
           type="text"
-          value={node.text}
+          value={text}
           tabIndex={4}
-          onBlur={() =>
-            dispatch({
-              type: "EditNode",
-              nodeId: nodeId,
-              props: {isEditing: false}
-            })
-          }
-          onChange={e =>
-            dispatch({
-              type: "EditNode",
-              nodeId: nodeId,
-              props: {text: e.target.value}
-            })
-          }
+          // onBlur={() =>
+          //   dispatch({
+          //     type: "EditNode",
+          //     nodeId: nodeId,
+          //     props: {isEditing: false}
+          //   })
+          // }
+          // onChange={e =>
+          //   dispatch({
+          //     type: "EditNode",
+          //     nodeId: nodeId,
+          //     props: {text: e.target.value}
+          //   })
+          // }
         />
       ) : (
-        node.text
+        text
       )}
-      {node.isLoading && <i> (Loading...)</i>}
-      {node.isChildrenHidden && "..."}
+      {isLoading && <i> (Loading...)</i>}
+      {isChildrenHidden && "..."}
     </div>
   );
 };
+
+const mapState = (state: State, props: OuterProps) => ({
+  text: state.favorites.nodes[props.nodeId].text,
+  isSelected: state.favorites.selectedNode === props.nodeId,
+  isEditing: false,
+  isLoading: false,
+  isChildrenHidden: false
+});
+
+export const RowItem = connect(mapState)(RowItemDef);

@@ -1,5 +1,5 @@
 import {createState, simulateActionCreator} from "./testUtils";
-import {AppState, TreeDefinition} from "../types";
+import {AppState, TreeDefinition} from "../../types";
 import {swapSelectedNodeDown, swapSelectedNodeLeft, swapSelectedNodeRight, swapSelectedNodeUp} from "./nodeSwap";
 
 it('swapping node 1.1.1 down should swap 1.1.1 and 1.1.2 nodes', () => {
