@@ -65,7 +65,6 @@ const RowItemDef = ({ level, text, isSelected, isEditing, isChildrenHidden, isLo
 
 const mapState = (state: State, props: OuterProps) => ({
   text: state.favorites.nodes[props.nodeId].text,
-  isSelected: state.favorites.selectedNode === props.nodeId,
   isEditing: false,
   isLoading: false,
   isChildrenHidden: false

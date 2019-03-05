@@ -10,8 +10,10 @@ export const onKeyPress = (event: KeyboardEvent, getState: () => State, dispatch
 
   if (overallState.userSettings.selection === "favorites") {
     state = overallState.favorites;
-  } else {
+  } else if (overallState.userSettings.selection === "search") {
     state = overallState.search;
+  } else {
+    return;
   }
 
   if (event.code === "Enter") {

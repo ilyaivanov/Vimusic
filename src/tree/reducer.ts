@@ -4,9 +4,7 @@ import { getPrevious, insertBefore, isFirst, removeItem } from "../utils/array";
 import { createEmptyTree, getContext, getParentKey, isRoot, updateNode } from "./treeUtils";
 import { createState } from "./keyHandlers/testUtils";
 
-const initial: AppState = createState("1");
-
-export const reducer = (state = initial, action: Action): AppState => {
+export const reducer = (state = createState("1"), action: Action): AppState => {
   if (action.type === "RESTORE") {
     return action.savedState;
   }
