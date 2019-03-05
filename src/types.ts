@@ -1,4 +1,13 @@
+import { PlayerAction, PlayerState } from "./player/types";
+import { Store } from "redux";
+
 export type Dispatch = (action: Action) => void;
+
+export interface State {
+  player: PlayerState;
+}
+
+export type VimusicStore = Store<State, PlayerAction>;
 
 export interface AppState {
   nodes: TreeNode;

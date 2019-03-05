@@ -1,22 +1,9 @@
-import React, { useEffect } from "react";
-import { connect, Provider } from "react-redux";
-import store from "./store";
-import { playVideo, togglePlay } from "./actions";
-import { PlayerState } from "./types";
+import React from "react";
+import { connect } from "react-redux";
+import { togglePlay } from "./actions";
 import YoutubePlayer from "./YoutubePlayer";
 import { useKeyboard } from "../utils/hooks";
-
-export default ({ videoId }: { videoId: string }) => {
-
-  useEffect(() => {
-    if (videoId)
-      store.dispatch(playVideo(videoId));
-  }, [videoId]);
-
-  return <Provider store={store}>
-    <MyButtonMapped/>
-  </Provider>;
-}
+import { State } from "../types";
 
 interface Props {
   youtubeId?: string;
@@ -36,13 +23,12 @@ const MyButton = ({ youtubeId, isPlaying, togglePlay }: Props) => {
   );
 };
 
-
-const mapState = (state: PlayerState) => ({
-  isPlaying: state.isPlaying,
-  youtubeId: state.youtubeVideoId
+const mapState = (state: State) => ({
+  isPlaying: state.player.isPlaying,
+  youtubeId: state.player.youtubeVideoId
 });
 
-const MyButtonMapped = connect(mapState, { togglePlay })(MyButton);
+export default connect(mapState, { togglePlay })(MyButton);
 
 
 

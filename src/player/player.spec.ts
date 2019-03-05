@@ -1,12 +1,13 @@
-import { createPlayerStore } from "./store";
 import { PlayerStore } from "./types";
 import { playVideo, togglePlay } from "./actions";
+import { createStore } from "redux";
+import reducer from "./reducer";
 
 describe("having a store", () => {
   let store: PlayerStore;
 
   beforeEach(() => {
-    store = createPlayerStore();
+    store = createStore(reducer);
   });
 
   it("by default video should not be player", () => {
