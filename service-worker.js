@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/Vimusic/precache-manifest.eb34f4a1cde9b06bc111dbcc91b0a852.js"
+  "/Vimusic/precache-manifest.e4287bb75d2d3c080e519f5f9ebb0b7e.js"
 );
 
 workbox.clientsClaim();

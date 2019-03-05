@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/Vimusic/static/js/runtime~main.954bb493.js"
   },
   {
-    "revision": "092cbdb3799c394382b7",
-    "url": "/Vimusic/static/js/main.092cbdb3.chunk.js"
+    "revision": "925bae818b8a2606af41",
+    "url": "/Vimusic/static/js/main.925bae81.chunk.js"
   },
   {
     "revision": "8d760a9e16148925f448",
     "url": "/Vimusic/static/js/2.8d760a9e.chunk.js"
   },
   {
-    "revision": "092cbdb3799c394382b7",
-    "url": "/Vimusic/static/css/main.c1652f47.chunk.css"
+    "revision": "925bae818b8a2606af41",
+    "url": "/Vimusic/static/css/main.fc69085c.chunk.css"
   },
   {
-    "revision": "25000f87dd41c2e88c1e6bbc393494f1",
+    "revision": "3b8b4bf01db4bbba5d8542f6cd0cd4c0",
     "url": "/Vimusic/index.html"
   }
 ];

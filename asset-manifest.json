@@ -1,13 +1,13 @@
 {
-  "main.css": "/Vimusic/static/css/main.c1652f47.chunk.css",
-  "main.js": "/Vimusic/static/js/main.092cbdb3.chunk.js",
-  "main.js.map": "/Vimusic/static/js/main.092cbdb3.chunk.js.map",
+  "main.css": "/Vimusic/static/css/main.fc69085c.chunk.css",
+  "main.js": "/Vimusic/static/js/main.925bae81.chunk.js",
+  "main.js.map": "/Vimusic/static/js/main.925bae81.chunk.js.map",
   "runtime~main.js": "/Vimusic/static/js/runtime~main.954bb493.js",
   "runtime~main.js.map": "/Vimusic/static/js/runtime~main.954bb493.js.map",
   "static/js/2.8d760a9e.chunk.js": "/Vimusic/static/js/2.8d760a9e.chunk.js",
   "static/js/2.8d760a9e.chunk.js.map": "/Vimusic/static/js/2.8d760a9e.chunk.js.map",
   "index.html": "/Vimusic/index.html",
-  "precache-manifest.eb34f4a1cde9b06bc111dbcc91b0a852.js": "/Vimusic/precache-manifest.eb34f4a1cde9b06bc111dbcc91b0a852.js",
+  "precache-manifest.e4287bb75d2d3c080e519f5f9ebb0b7e.js": "/Vimusic/precache-manifest.e4287bb75d2d3c080e519f5f9ebb0b7e.js",
   "service-worker.js": "/Vimusic/service-worker.js",
-  "static/css/main.c1652f47.chunk.css.map": "/Vimusic/static/css/main.c1652f47.chunk.css.map"
+  "static/css/main.fc69085c.chunk.css.map": "/Vimusic/static/css/main.fc69085c.chunk.css.map"
 }

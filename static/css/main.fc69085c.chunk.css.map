@@ -1,0 +1,1 @@
+{"version":3,"sources":["/Users/illiai/Desktop/Vimusic/src/index.css"],"names":[],"mappings":"AAAA,KACE,SAAU,AACV,SAAW,CACZ,AAGD,YACE,yBAA4B,AAC5B,YAAc,CACf","file":"main.fc69085c.chunk.css","sourcesContent":["body {\n  margin: 0;\n  padding: 0;\n}\n\n\n.area:focus{\n  background-color: aliceblue;\n  outline: none;\n}\n"]}
