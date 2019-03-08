@@ -3,8 +3,9 @@ import { handleTraversal } from "./traversal";
 import { createNode, deleteNode, startEditNode, stopEditNode } from "./actions";
 import { isEditingCurrentNode } from "../treeUtils";
 import { swapSelectedNodeDown, swapSelectedNodeLeft, swapSelectedNodeRight, swapSelectedNodeUp } from "./nodeSwap";
+import { playVideo } from "../../player/actions";
 
-export const onKeyPress = (event: KeyboardEvent) =>  (dispatch: Dispatch, getState: () => State) => {
+export const onKeyPress = (event: KeyboardEvent) => (dispatch: Dispatch, getState: () => State) => {
   const overallState = getState();
   let state: AppState = {} as any;
 
@@ -47,6 +48,11 @@ export const onKeyPress = (event: KeyboardEvent) =>  (dispatch: Dispatch, getSta
   }
   if (event.code === "Backspace") {
     dispatch(deleteNode(state.selectedNode));
+  }
+  if (event.code === "KeyP") {
+    const node = state.nodes[state.selectedNode];
+    if (node.youtubeId)
+      dispatch(playVideo(node.youtubeId));
   }
 };
 

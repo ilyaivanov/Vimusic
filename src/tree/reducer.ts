@@ -1,10 +1,10 @@
-import { Action, AppState, TreeNode } from "../types";
+import { TreeAction, AppState, TreeNode } from "../types";
 
 import { getPrevious, insertBefore, isFirst, removeItem } from "../utils/array";
 import { createEmptyTree, getContext, getParentKey, isRoot, updateNode } from "./treeUtils";
 import { createState } from "./keyHandlers/testUtils";
 
-export const reducer = (state = createState("1"), action: Action): AppState => {
+export const reducer = (state = createState("1"), action: TreeAction): AppState => {
   if (action.type === "RESTORE") {
     return action.savedState;
   }

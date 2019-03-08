@@ -1,4 +1,4 @@
-import { Action, AppState, AppStateActionCreator, State, TreeDefinition, TreeNode } from "../../types";
+import { TreeAction, AppState, AppStateActionCreator, State, TreeDefinition, TreeNode, Action } from "../../types";
 import { reducer } from "../reducer";
 import { onKeyPress } from "./index";
 
@@ -12,7 +12,7 @@ export const createState = (selected: string): AppState => ({
 export const simulateKeyboardPress = (initialPosition: string, code: string) => {
   let state = createState(initialPosition);
   const dummyDispatch = (action: Action) => {
-    state = reducer(state, action);
+    state = reducer(state, action as TreeAction);
   };
   const overallState: State = {
     favorites: state,
@@ -32,7 +32,7 @@ export const simulateKeyboardPress = (initialPosition: string, code: string) => 
 export const simulateKeyboardPressForState = (state: AppState, code: string) => {
   let result = state;
   const dummyDispatch = (action: Action) => {
-    result = reducer(result, action);
+    result = reducer(result, action as TreeAction);
   };
   const overallState: State = {
     favorites: state,
@@ -57,7 +57,7 @@ export const simulateSequenceOfEventsOnSelectedNode = (initialPosition: string, 
 export const simulateActionCreator = (state: AppState, actionCreator: AppStateActionCreator) => {
   let result = state;
   const dummyDispatch = (action: Action) => {
-    result = reducer(result, action);
+    result = reducer(result, action as TreeAction);
   };
   actionCreator(result, dummyDispatch);
   return result;

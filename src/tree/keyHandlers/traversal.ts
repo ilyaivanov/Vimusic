@@ -1,4 +1,4 @@
-import {Action, AppState, AppStateActionCreator, Dispatch, TreeDefinition} from "../../types";
+import {TreeAction, AppState, AppStateActionCreator, Dispatch, TreeDefinition} from "../../types";
 import {
   getChildren,
   getContext,
@@ -109,7 +109,7 @@ function moveNodeLeft(state: AppState, dispatch: Dispatch) {
   }
 }
 
-export const setVideosAsChildren = (nodeId: string, videos: Video[]): Action => {
+export const setVideosAsChildren = (nodeId: string, videos: Video[]): TreeAction => {
   const children: TreeDefinition[] = videos.map(video =>
     ({id: Math.random() + '', text: video.text, youtubeId: video.id})
   );

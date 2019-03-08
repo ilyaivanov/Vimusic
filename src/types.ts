@@ -1,7 +1,7 @@
 import { PlayerAction, PlayerState } from "./player/types";
 import { Store } from "redux";
 
-export type Dispatch = (action: Action) => void;
+export type Dispatch = (action: TreeAction | PlayerAction) => void;
 
 export interface State {
   player: PlayerState;
@@ -94,7 +94,7 @@ export interface RestoreAction {
   savedState: AppState;
 }
 
-export type Action =
+export type TreeAction =
   PlainAction
   | SetAction
   | EditAction
@@ -105,6 +105,7 @@ export type Action =
   | SetRootsAction
   | RestoreAction;
 
+export type Action = TreeAction | PlayerAction;
 
 export type AppStateActionCreator = (state: AppState, dispatch: Dispatch) => void;
 
