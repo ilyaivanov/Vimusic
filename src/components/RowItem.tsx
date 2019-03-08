@@ -1,21 +1,14 @@
 import React, { useRef } from "react";
-import { State } from "../types";
-import { connect } from "react-redux";
+import { TreeDefinition } from "../types";
 
-interface OuterProps{
-  level?: number;
-  nodeId: string;
+interface OuterProps {
+  level: number;
+  isSelected: boolean
+  node: TreeDefinition;
 }
 
-interface RowItemProps extends OuterProps{
-  text: string;
-  isSelected: boolean;
-  isEditing: boolean;
-  isChildrenHidden: boolean;
-  isLoading: boolean;
-}
 
-const RowItemDef = ({ level, text, isSelected, isEditing, isChildrenHidden, isLoading }: RowItemProps) => {
+const RowItem = ({ level, node, isSelected }: OuterProps) => {
   const txt1 = useRef(null);
 
   // useEffect(() => {
@@ -33,11 +26,11 @@ const RowItemDef = ({ level, text, isSelected, isEditing, isChildrenHidden, isLo
         backgroundColor: isSelected ? "#c3c3c3" : undefined
       }}
     >
-      {isEditing ? (
+      {node.isEditing ? (
         <input
           ref={txt1}
           type="text"
-          value={text}
+          value={node.text}
           tabIndex={4}
           // onBlur={() =>
           //   dispatch({
@@ -55,19 +48,12 @@ const RowItemDef = ({ level, text, isSelected, isEditing, isChildrenHidden, isLo
           // }
         />
       ) : (
-        text
+        node.text
       )}
-      {isLoading && <i> (Loading...)</i>}
-      {isChildrenHidden && "..."}
+      {node.isLoading && <i> (Loading...)</i>}
+      {node.isChildrenHidden && "..."}
     </div>
   );
 };
 
-const mapState = (state: State, props: OuterProps) => ({
-  text: state.favorites.nodes[props.nodeId].text,
-  isEditing: false,
-  isLoading: false,
-  isChildrenHidden: false
-});
-
-export const RowItem = connect(mapState)(RowItemDef);
+export default RowItem;
