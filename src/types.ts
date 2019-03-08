@@ -32,6 +32,7 @@ export interface TreeDefinition {
   id: string;
   children?: string[];
   text: string;
+  image?: string;
   youtubeId?: string;
   isChildrenHidden?: boolean;
   isLoading?: boolean;

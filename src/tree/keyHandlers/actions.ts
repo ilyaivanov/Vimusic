@@ -11,6 +11,11 @@ export const deleteNode = (nodeId: string): TreeAction => ({
   nodeId
 });
 
+export const setNodes = (nodes: TreeDefinition[]): TreeAction => ({
+  type: "SET_NODES",
+  nodes
+});
+
 export const startEditNode = (nodeId: string): TreeAction =>
   editAction(nodeId, { isEditing: true });
 

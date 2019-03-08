@@ -1,4 +1,4 @@
-import {TreeAction, AppState, AppStateActionCreator, Dispatch, TreeDefinition} from "../../types";
+import { AppState, AppStateActionCreator, Dispatch, TreeAction, TreeDefinition } from "../../types";
 import {
   getChildren,
   getContext,
@@ -11,19 +11,19 @@ import {
   isNodeLoading,
   isRoot
 } from "../treeUtils";
-import {isFirst, isLast, nextItem, previousItem} from "../../utils/array";
-import {endLoading, hideChildren, selectNode, showChildren, startLoading, stopEditNode} from "./actions";
-import {fetchSimilarVideos, Video} from "../../api";
+import { isFirst, isLast, nextItem, previousItem } from "../../utils/array";
+import { endLoading, hideChildren, selectNode, showChildren, startLoading, stopEditNode } from "./actions";
+import { fetchSimilarVideos, Video } from "../../api";
 
 type Codes = {
   [id: string]: AppStateActionCreator | undefined;
 }
 
 const codes: Codes = {
-  'ArrowDown': moveNodeDown,
-  'ArrowUp': moveNodeUp,
-  'ArrowRight': moveNodeRight,
-  'ArrowLeft': moveNodeLeft,
+  "ArrowDown": moveNodeDown,
+  "ArrowUp": moveNodeUp,
+  "ArrowRight": moveNodeRight,
+  "ArrowLeft": moveNodeLeft
 };
 
 export const handleTraversal = (event: KeyboardEvent, state: AppState, dispatch: Dispatch) => {
@@ -88,7 +88,7 @@ function moveNodeRight(state: AppState, dispatch: Dispatch) {
     fetchSimilarVideos(state.nodes[state.selectedNode].youtubeId as string)
       .then((videos) => {
         dispatch(endLoading(state.selectedNode));
-        dispatch(setVideosAsChildren(state.selectedNode, videos))
+        dispatch(setVideosAsChildren(state.selectedNode, videos));
       });
   } else if (isNodeHidden(state, state.selectedNode)) {
     dispatch(showChildren(state.selectedNode));
@@ -105,18 +105,18 @@ function moveNodeLeft(state: AppState, dispatch: Dispatch) {
   ) {
     dispatch(hideChildren(state.selectedNode));
   } else if (!isRoot(state, state.selectedNode)) {
-    dispatch(selectNode(getParentKey(state, state.selectedNode)))
+    dispatch(selectNode(getParentKey(state, state.selectedNode)));
   }
 }
 
 export const setVideosAsChildren = (nodeId: string, videos: Video[]): TreeAction => {
   const children: TreeDefinition[] = videos.map(video =>
-    ({id: Math.random() + '', text: video.text, youtubeId: video.id})
+    ({ id: Math.random() + "", text: video.text, youtubeId: video.id, image: video.imagePreview })
   );
   return {
     type: "SET_CHILDREN",
     parentId: nodeId,
     children
-  }
+  };
 };
 

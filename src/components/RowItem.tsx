@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { State, TreeDefinition } from "../types";
+import { TreeDefinition } from "../types";
 import { editAction } from "../tree/keyHandlers/actions";
 import { connect } from "react-redux";
 
@@ -23,11 +23,23 @@ const RowItem = ({ level, node, isSelected, editAction }: OuterProps) => {
   return (
     <div
       style={{
-        fontWeight: isSelected ? 600 : undefined,
+        display: "flex",
+        alignItems: "center",
+        marginTop: 4,
+        marginBottom: 4,
+        height: 30,
         paddingLeft: level ? level * 20 : undefined,
         backgroundColor: isSelected ? "#c3c3c3" : undefined
       }}
     >
+      {
+        <img
+          style={{ paddingRight: 10 }}
+          height={30}
+          width={30}
+          src={node.image || "https://cdn4.iconfinder.com/data/icons/categories-2/32/356-01-512.png"}
+          alt="Image"/>
+      }
       {node.isEditing ? (
         <input
           ref={txt1}

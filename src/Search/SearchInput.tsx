@@ -20,7 +20,8 @@ export default ({onSearched}: Props) => {
         const nodes: TreeDefinition[] = videos.map(v => ({
           id: Math.random() + '',
           text: v.text,
-          youtubeId: v.id
+          youtubeId: v.id,
+          image: v.imagePreview
         }));
         onSearched(nodes);
       });

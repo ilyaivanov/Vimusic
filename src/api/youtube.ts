@@ -12,7 +12,8 @@ export const searchVideos = (term: string): Promise<Video[]> =>
       data.items
         .filter(v => v.id.videoId)
         .map(s => {
-          return {text: s.snippet.title, id: s.id.videoId};
+          console.log(s.snippet.thumbnails);
+          return {text: s.snippet.title, id: s.id.videoId, imagePreview: s.snippet.thumbnails.default.url};
         })
     );
 
@@ -26,6 +27,6 @@ export const searchSimilar = (videoId: string): Promise<Video[]> =>
       data.items
         .filter(v => v.id.videoId)
         .map(s => {
-          return {text: s.snippet.title, id: s.id.videoId};
+          return {text: s.snippet.title, id: s.id.videoId, imagePreview: s.snippet.thumbnails.default.url};
         })
     );

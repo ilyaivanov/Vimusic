@@ -9,8 +9,9 @@ import store from "./store";
 import { playVideo } from "./player/actions";
 import { useKeyboard } from "./utils/hooks";
 import { select } from "./userSettings/actions";
+import { setNodes } from "./tree/keyHandlers/actions";
 
-const App = ({ playVideo, favorites, search, onKeyPress, select, scope }: any) => {
+const App = ({ playVideo, favorites, search, onKeyPress, select, scope, setNodes }: any) => {
 
   const searchRef = useRef(null);
   const favoritesRef = useRef(null);
@@ -37,7 +38,7 @@ const App = ({ playVideo, favorites, search, onKeyPress, select, scope }: any) =
         <div className="area" ref={searchRef} tabIndex={2}
              onFocus={() => select('search')}
              style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          <SearchInput onSearched={nodes => console.log(nodes)}/>
+          <SearchInput onSearched={setNodes}/>
           <Tree app={search}/>
         </div>
         <div className="area" ref={favoritesRef} onFocus={() => select('favorites')} tabIndex={3} style={{ flex: 2 }}>
@@ -56,7 +57,7 @@ const mapState = (state: State) => ({
   scope: state.userSettings.selection
 });
 
-const AppMapped = connect(mapState, { playVideo, select, onKeyPress })(App);
+const AppMapped = connect(mapState, { playVideo, select, onKeyPress, setNodes })(App);
 
 export default () => (
   <Provider store={store}>

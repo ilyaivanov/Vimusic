@@ -12,4 +12,5 @@ export const fetchSimilarVideos = (videoId: string): Promise<Video[]> =>
 export interface Video {
   text: string;
   id: string;
+  imagePreview: string;
 }
