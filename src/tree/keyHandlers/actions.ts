@@ -37,7 +37,7 @@ export const setRoots = (roots: string[]): Action => ({
   roots
 });
 
-const editAction = (nodeId: string, props: Partial<TreeDefinition>): Action => ({
+export const editAction = (nodeId: string, props: Partial<TreeDefinition>): Action => ({
   type: "EditNode",
   nodeId,
   props

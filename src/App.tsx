@@ -10,7 +10,7 @@ import { playVideo } from "./player/actions";
 import { useKeyboard } from "./utils/hooks";
 import { select } from "./userSettings/actions";
 
-const App = ({ playVideo, favorites, search, handleFavoritesKeyPressed, select, scope }: any) => {
+const App = ({ playVideo, favorites, search, onKeyPress, select, scope }: any) => {
 
   const searchRef = useRef(null);
   const favoritesRef = useRef(null);
@@ -29,7 +29,7 @@ const App = ({ playVideo, favorites, search, handleFavoritesKeyPressed, select, 
     }
   }, [searchRef, favoritesRef, scope]);
 
-  useKeyboard(handleFavoritesKeyPressed);
+  useKeyboard(onKeyPress);
 
   return (
     <div>
@@ -56,14 +56,7 @@ const mapState = (state: State) => ({
   scope: state.userSettings.selection
 });
 
-const handleFavoritesKeyPressed = (event: KeyboardEvent) => (dispatch: any, getState: () => State) => {
-  const dispatcher = (a: any) => dispatch({ ...a, selection: getState().userSettings.selection });
-  onKeyPress(event, getState, dispatcher);
-};
-
-
-
-const AppMapped = connect(mapState, { playVideo, select, handleFavoritesKeyPressed })(App);
+const AppMapped = connect(mapState, { playVideo, select, onKeyPress })(App);
 
 export default () => (
   <Provider store={store}>

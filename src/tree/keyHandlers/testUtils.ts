@@ -24,7 +24,7 @@ export const simulateKeyboardPress = (initialPosition: string, code: string) => 
       isPlaying: false
     }
   };
-  onKeyPress({ code } as KeyboardEvent, () => overallState, dummyDispatch);
+  onKeyPress({ code } as KeyboardEvent)(dummyDispatch, () => overallState);
   return state;
 };
 
@@ -44,7 +44,7 @@ export const simulateKeyboardPressForState = (state: AppState, code: string) => 
       isPlaying: false
     }
   };
-  onKeyPress({ code } as KeyboardEvent, () => overallState, dummyDispatch);
+  onKeyPress({ code } as KeyboardEvent)(dummyDispatch, () => overallState);
   return result;
 };
 

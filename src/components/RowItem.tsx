@@ -1,22 +1,24 @@
-import React, { useRef } from "react";
-import { TreeDefinition } from "../types";
+import React, { useEffect, useRef } from "react";
+import { State, TreeDefinition } from "../types";
+import { editAction } from "../tree/keyHandlers/actions";
+import { connect } from "react-redux";
 
 interface OuterProps {
   level: number;
   isSelected: boolean
   node: TreeDefinition;
+  editAction: typeof editAction;
 }
 
-
-const RowItem = ({ level, node, isSelected }: OuterProps) => {
+const RowItem = ({ level, node, isSelected, editAction }: OuterProps) => {
   const txt1 = useRef(null);
 
-  // useEffect(() => {
-  //   const {current} = txt1 as any;
-  //   if (current && node.isEditing) {
-  //     current.focus();
-  //   }
-  // }, [node.isEditing]);
+  useEffect(() => {
+    const { current } = txt1 as any;
+    if (current && node.isEditing) {
+      current.focus();
+    }
+  }, [node.isEditing]);
 
   return (
     <div
@@ -32,20 +34,8 @@ const RowItem = ({ level, node, isSelected }: OuterProps) => {
           type="text"
           value={node.text}
           tabIndex={4}
-          // onBlur={() =>
-          //   dispatch({
-          //     type: "EditNode",
-          //     nodeId: nodeId,
-          //     props: {isEditing: false}
-          //   })
-          // }
-          // onChange={e =>
-          //   dispatch({
-          //     type: "EditNode",
-          //     nodeId: nodeId,
-          //     props: {text: e.target.value}
-          //   })
-          // }
+          onBlur={() => editAction(node.id, { isEditing: false })}
+          onChange={e => editAction(node.id, { text: e.target.value })}
         />
       ) : (
         node.text
@@ -56,4 +46,4 @@ const RowItem = ({ level, node, isSelected }: OuterProps) => {
   );
 };
 
-export default RowItem;
+export default connect(null, { editAction })(RowItem);

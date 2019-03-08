@@ -4,6 +4,7 @@ import treeReducer from "./tree/reducer";
 import userSettings from "./userSettings/reducer";
 import thunk from "redux-thunk";
 import { SelectionScope, State } from "./types";
+import treeMiddleware from "./tree/treeMiddleware";
 
 declare global {
   interface Window {
@@ -29,7 +30,7 @@ const reducer = combineReducers({
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const createPlayerStore = () => createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
+export const createPlayerStore = () => createStore(reducer, composeEnhancers(applyMiddleware(thunk, treeMiddleware)));
 
 export default createPlayerStore();
 

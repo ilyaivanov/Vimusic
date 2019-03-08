@@ -4,7 +4,7 @@ import { createNode, deleteNode, startEditNode, stopEditNode } from "./actions";
 import { isEditingCurrentNode } from "../treeUtils";
 import { swapSelectedNodeDown, swapSelectedNodeLeft, swapSelectedNodeRight, swapSelectedNodeUp } from "./nodeSwap";
 
-export const onKeyPress = (event: KeyboardEvent, getState: () => State, dispatch: Dispatch) => {
+export const onKeyPress = (event: KeyboardEvent) =>  (dispatch: Dispatch, getState: () => State) => {
   const overallState = getState();
   let state: AppState = {} as any;
 
