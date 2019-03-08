@@ -1,13 +1,17 @@
-import React, {useEffect, useState} from "react";
-import {useDebounce} from "../utils/hooks";
-import {searchVideos} from "../api";
-import {TreeDefinition} from "../types";
+import React, { useEffect, useState } from "react";
+import { useDebounce } from "../utils/hooks";
+import { searchVideos } from "../api";
+import { TreeDefinition } from "../types";
+import { connect } from "react-redux";
+import { select } from "../userSettings/actions";
 
 interface Props {
   onSearched: (nodes: TreeDefinition[]) => void;
+  tabIndex: number;
+  select: typeof select;
 }
 
-export default ({onSearched}: Props) => {
+const Search = ({ onSearched, tabIndex, select }: Props) => {
   const [text, setText] = useState("");
   const value = useDebounce(text, 500);
   const [isSearching, setIsSearching] = useState(false);
@@ -18,7 +22,7 @@ export default ({onSearched}: Props) => {
       searchVideos(value).then(videos => {
         setIsSearching(false);
         const nodes: TreeDefinition[] = videos.map(v => ({
-          id: Math.random() + '',
+          id: Math.random() + "",
           text: v.text,
           youtubeId: v.id,
           image: v.imagePreview
@@ -30,11 +34,14 @@ export default ({onSearched}: Props) => {
 
   return (
     <input
-      tabIndex={1}
+      tabIndex={tabIndex}
       value={text}
       onChange={e => setText(e.target.value)}
+      onFocus={() => select("searchInput")}
       type="text"
-      style={{width: '100%', boxSizing: 'border-box'}}
+      style={{ width: "100%", boxSizing: "border-box" }}
     />
   );
 };
+
+export default connect(null, { select })(Search);

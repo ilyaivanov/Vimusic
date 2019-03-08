@@ -13,6 +13,7 @@ export const deleteNode = (nodeId: string): TreeAction => ({
 
 export const setNodes = (nodes: TreeDefinition[]): TreeAction => ({
   type: "SET_NODES",
+  selection: "search",
   nodes
 });
 

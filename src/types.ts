@@ -53,6 +53,7 @@ export interface PlainAction {
 export interface SetAction {
   type: "SET_NODES";
   nodes: TreeDefinition[];
+  selection: string;
 }
 
 export interface EditAction {

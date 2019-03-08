@@ -29,12 +29,12 @@ const RowItem = ({ level, node, isSelected, editAction }: OuterProps) => {
         marginBottom: 4,
         height: 30,
         paddingLeft: level ? level * 20 : undefined,
-        backgroundColor: isSelected ? "#c3c3c3" : undefined
+        backgroundColor: isSelected ? "#c3c3c3" : undefined,
       }}
     >
       {
         <img
-          style={{ paddingRight: 10 }}
+          style={{ paddingRight: 10, paddingLeft: 4 }}
           height={30}
           width={30}
           src={node.image || "https://cdn4.iconfinder.com/data/icons/categories-2/32/356-01-512.png"}
@@ -50,7 +50,7 @@ const RowItem = ({ level, node, isSelected, editAction }: OuterProps) => {
           onChange={e => editAction(node.id, { text: e.target.value })}
         />
       ) : (
-        node.text
+        <div>{node.text}</div>
       )}
       {node.isLoading && <i> (Loading...)</i>}
       {node.isChildrenHidden && "..."}

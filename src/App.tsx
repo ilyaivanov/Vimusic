@@ -19,11 +19,11 @@ const App = ({ playVideo, favorites, search, onKeyPress, select, scope, setNodes
   useEffect(() => {
     if (favoritesRef && searchRef) {
       if (scope === "favorites") {
-        console.log('setting focus to favorites');
+        console.log("setting focus to favorites");
         // @ts-ignore
         favoritesRef.current.focus();
       } else if (scope === "search") {
-        console.log('setting focus to search');
+        console.log("setting focus to search");
         // @ts-ignore
         searchRef.current.focus();
       }
@@ -35,13 +35,14 @@ const App = ({ playVideo, favorites, search, onKeyPress, select, scope, setNodes
   return (
     <div>
       <div style={{ flexDirection: "row", display: "flex", alignItems: "stretch", height: "100vh" }}>
-        <div className="area" ref={searchRef} tabIndex={2}
-             onFocus={() => select('search')}
-             style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          <SearchInput onSearched={setNodes}/>
-          <Tree app={search}/>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <SearchInput onSearched={setNodes} tabIndex={1}/>
+          <div className="area" ref={searchRef} tabIndex={2}
+               onFocus={() => select("search")}>
+            <Tree app={search}/>
+          </div>
         </div>
-        <div className="area" ref={favoritesRef} onFocus={() => select('favorites')} tabIndex={3} style={{ flex: 2 }}>
+        <div className="area" ref={favoritesRef} onFocus={() => select("favorites")} tabIndex={3} style={{ flex: 2 }}>
           <div style={{ textAlign: "center" }}>Favorites</div>
           <Tree app={favorites}/>
         </div>

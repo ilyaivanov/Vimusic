@@ -1,9 +1,10 @@
 const treeMiddleware = store => next => action => {
-  const actionWithSelection = {
-    ...action,
-    selection: store.getState().userSettings.selection
-  };
-  return next(actionWithSelection);
+  const nextAction = action.selection ? action :
+    {
+      ...action,
+      selection: store.getState().userSettings.selection
+    };
+  return next(nextAction);
 };
 
 export default treeMiddleware;
